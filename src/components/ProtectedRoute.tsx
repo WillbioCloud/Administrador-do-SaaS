@@ -6,22 +6,44 @@ export default function ProtectedRoute() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
 
   useEffect(() => {
-    // 1. Checa se já existe uma sessão ativa ao carregar
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsAuthenticated(!!session)
-    })
+    const checkAccess = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
 
-    // 2. Fica escutando mudanças (ex: se o usuário deslogar em outra aba)
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAuthenticated(!!session)
+      if (!session) {
+        setIsAuthenticated(false)
+        return
+      }
+
+      // Segurança Extra: Verifica se a sessão ativa realmente é da Matriz
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('companies(slug)')
+        .eq('id', session.user.id)
+        .single()
+
+      // @ts-ignore
+      if (profile?.companies?.slug === 'hub-saas') {
+        setIsAuthenticated(true)
+      } else {
+        // É um usuário normal tentando acessar via URL direta
+        await supabase.auth.signOut()
+        setIsAuthenticated(false)
+      }
+    }
+
+    checkAccess()
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        checkAccess() // Re-valida caso a sessão mude
+      } else {
+        setIsAuthenticated(false)
+      }
     })
 
     return () => subscription.unsubscribe()
   }, [])
 
-  // Enquanto o Supabase pensa, mostra uma telinha preta para não piscar
   if (isAuthenticated === null) {
     return (
       <div className="min-h-screen bg-[#050505] flex items-center justify-center">
@@ -30,11 +52,9 @@ export default function ProtectedRoute() {
     )
   }
 
-  // Se não tem sessão, expulsa para o Login
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />
   }
 
-  // Se estiver logado, libera o acesso ao MainLayout
   return <Outlet />
 }
