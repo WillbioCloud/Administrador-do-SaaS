@@ -1,81 +1,203 @@
-import React from "react"
-import { 
-  Building2, 
-  Users, 
-  CreditCard, 
+import { useEffect, useState } from "react"
+import {
+  Building2,
+  Users,
+  CreditCard,
   UserMinus,
   ArrowUpRight,
   ArrowDownRight
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
   ResponsiveContainer,
   BarChart,
   Bar
 } from "recharts"
+import { supabase } from "../lib/supabase"
 
-const revenueData = [
-  { name: "Jan", revenue: 45000 },
-  { name: "Fev", revenue: 52000 },
-  { name: "Mar", revenue: 48000 },
-  { name: "Abr", revenue: 61000 },
-  { name: "Mai", revenue: 75000 },
-  { name: "Jun", revenue: 86000 },
-  { name: "Jul", revenue: 105000 },
-]
-
-// Seus planos oficiais atualizados
-const planData = [
-  { name: "Starter", users: 120 },
-  { name: "Basic", users: 200 },
-  { name: "Profissional", users: 450 },
-  { name: "Business", users: 300 },
-  { name: "Premium", users: 150 },
-  { name: "Elite", users: 80 },
-]
-
-const stats = [
-  {
-    name: "Total de Clientes Ativos",
-    value: "1.300",
-    icon: Users,
-    change: "+12.5%",
-    changeType: "positive",
-    description: "em relação ao mês passado"
-  },
-  {
-    name: "Receita Recorrente (MRR)",
-    value: "R$ 105.000,00",
-    icon: CreditCard,
-    change: "+18.2%",
-    changeType: "positive",
-    description: "em relação ao mês passado"
-  },
-  {
-    name: "Novos Clientes (Mês)",
-    value: "142",
-    icon: Building2,
-    change: "+5.4%",
-    changeType: "positive",
-    description: "em relação ao mês passado"
-  },
-  {
-    name: "Cancelamentos (Mês)",
-    value: "12",
-    icon: UserMinus,
-    change: "-2.1%", 
-    changeType: "positive", // Menos cancelamentos é algo positivo!
-    description: "em relação ao mês passado"
-  },
-]
+const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
 
 export default function Dashboard() {
+  const [stats, setStats] = useState([
+    {
+      name: "Total de Clientes Ativos",
+      value: "0",
+      icon: Users,
+      change: "0%",
+      changeType: "positive",
+      description: "dados em tempo real"
+    },
+    {
+      name: "Receita Recorrente (MRR)",
+      value: "R$ 0,00",
+      icon: CreditCard,
+      change: "0%",
+      changeType: "positive",
+      description: "dados em tempo real"
+    },
+    {
+      name: "Novos Clientes (Mês)",
+      value: "0",
+      icon: Building2,
+      change: "0%",
+      changeType: "positive",
+      description: "dados em tempo real"
+    },
+    {
+      name: "Cancelamentos (Mês)",
+      value: "0",
+      icon: UserMinus,
+      change: "0%",
+      changeType: "positive",
+      description: "dados em tempo real"
+    },
+  ])
+  const [revenueData, setRevenueData] = useState<{ name: string; revenue: number }[]>([])
+  const [planData, setPlanData] = useState<{ name: string; users: number }[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const [{ data: companies, error: companiesError }, { data: payments, error: paymentsError }] = await Promise.all([
+          supabase.from("companies").select("*"),
+          supabase.from("saas_payments").select("*"),
+        ])
+
+        if (companiesError || paymentsError) {
+          throw companiesError || paymentsError
+        }
+
+        const companiesData = companies ?? []
+        const paymentsData = payments ?? []
+
+        const now = new Date()
+        const currentMonth = now.getMonth()
+        const currentYear = now.getFullYear()
+
+        const activeCustomers = companiesData.filter((company) => company.active === true).length
+        const newCustomersThisMonth = companiesData.filter((company) => {
+          if (!company.created_at) return false
+          const createdDate = new Date(company.created_at)
+          return createdDate.getMonth() === currentMonth && createdDate.getFullYear() === currentYear
+        }).length
+        const inactiveCustomers = companiesData.filter((company) => company.active === false).length
+
+        const mrr = paymentsData
+          .filter((payment) => {
+            if (payment.status !== "paid") return false
+            const paymentDate = payment.paid_at ? new Date(payment.paid_at) : payment.reference_month ? new Date(payment.reference_month) : null
+            if (!paymentDate || Number.isNaN(paymentDate.getTime())) return false
+            return paymentDate.getMonth() === currentMonth && paymentDate.getFullYear() === currentYear
+          })
+          .reduce((sum, payment) => sum + (Number(payment.amount) || 0), 0)
+
+        const formattedMrr = new Intl.NumberFormat("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+        }).format(mrr)
+
+        setStats([
+          {
+            name: "Total de Clientes Ativos",
+            value: activeCustomers.toLocaleString("pt-BR"),
+            icon: Users,
+            change: "0%",
+            changeType: "positive",
+            description: "dados em tempo real"
+          },
+          {
+            name: "Receita Recorrente (MRR)",
+            value: formattedMrr,
+            icon: CreditCard,
+            change: "0%",
+            changeType: "positive",
+            description: "dados em tempo real"
+          },
+          {
+            name: "Novos Clientes (Mês)",
+            value: newCustomersThisMonth.toLocaleString("pt-BR"),
+            icon: Building2,
+            change: "0%",
+            changeType: "positive",
+            description: "dados em tempo real"
+          },
+          {
+            name: "Cancelamentos (Mês)",
+            value: inactiveCustomers.toLocaleString("pt-BR"),
+            icon: UserMinus,
+            change: "0%",
+            changeType: "positive",
+            description: "dados em tempo real"
+          },
+        ])
+
+        const planCounts = companiesData
+          .filter((company) => company.active === true)
+          .reduce((acc: Record<string, number>, company) => {
+            const planName = company.plan || "Sem plano"
+            acc[planName] = (acc[planName] || 0) + 1
+            return acc
+          }, {})
+
+        const nextPlanData = Object.entries(planCounts)
+          .map(([name, users]) => ({ name, users: Number(users) }))
+          .sort((a, b) => b.users - a.users)
+
+        setPlanData(nextPlanData)
+
+        const monthlyRevenueMap = paymentsData
+          .filter((payment) => payment.status === "paid")
+          .reduce((acc: Record<string, number>, payment) => {
+            const rawDate = payment.paid_at || payment.reference_month
+            if (!rawDate) return acc
+            const paymentDate = new Date(rawDate)
+            if (Number.isNaN(paymentDate.getTime())) return acc
+
+            const key = `${paymentDate.getFullYear()}-${String(paymentDate.getMonth() + 1).padStart(2, "0")}`
+            acc[key] = (acc[key] || 0) + (Number(payment.amount) || 0)
+            return acc
+          }, {})
+
+        const nextRevenueData = Object.entries(monthlyRevenueMap)
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([key, revenue]) => {
+            const [year, month] = key.split("-")
+            const monthIndex = Number(month) - 1
+            return {
+              name: `${monthNames[monthIndex]}/${year.slice(2)}`,
+              revenue: Number(revenue),
+            }
+          })
+
+        setRevenueData(nextRevenueData)
+      } catch (error) {
+        console.error("Erro ao carregar dados do dashboard:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchDashboardData()
+  }, [])
+
+  if (isLoading) {
+    return (
+      <div className="space-y-8 animate-in fade-in duration-500">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">Dashboard</h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">A carregar dados do painel...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div>
@@ -131,28 +253,28 @@ export default function Dashboard() {
                   margin={{ top: 5, right: 20, left: 20, bottom: 0 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#334155" opacity={0.2} />
-                  <XAxis 
-                    dataKey="name" 
+                  <XAxis
+                    dataKey="name"
                     axisLine={false}
                     tickLine={false}
                     tick={{ fill: '#64748b', fontSize: 12 }}
                     dy={10}
                   />
-                  <YAxis 
+                  <YAxis
                     axisLine={false}
                     tickLine={false}
                     tick={{ fill: '#64748b', fontSize: 12 }}
-                    tickFormatter={(value) => `R$ ${value / 1000}k`}
+                    tickFormatter={(value) => `R$ ${Number(value) / 1000}k`}
                   />
-                  <Tooltip 
+                  <Tooltip
                     contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#f8fafc', borderRadius: '8px' }}
                     itemStyle={{ color: '#818cf8' }}
                     formatter={(value: number) => [`R$ ${value.toLocaleString('pt-BR')}`, 'Receita']}
                   />
-                  <Line 
-                    type="monotone" 
-                    dataKey="revenue" 
-                    stroke="#818cf8" 
+                  <Line
+                    type="monotone"
+                    dataKey="revenue"
+                    stroke="#818cf8"
                     strokeWidth={3}
                     dot={{ r: 4, fill: '#818cf8', strokeWidth: 0 }}
                     activeDot={{ r: 6, strokeWidth: 0 }}
@@ -178,28 +300,28 @@ export default function Dashboard() {
                   margin={{ top: 5, right: 20, left: 0, bottom: 0 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#334155" opacity={0.2} />
-                  <XAxis 
-                    dataKey="name" 
+                  <XAxis
+                    dataKey="name"
                     axisLine={false}
                     tickLine={false}
                     tick={{ fill: '#64748b', fontSize: 12 }}
                     dy={10}
                   />
-                  <YAxis 
+                  <YAxis
                     axisLine={false}
                     tickLine={false}
                     tick={{ fill: '#64748b', fontSize: 12 }}
                   />
-                  <Tooltip 
+                  <Tooltip
                     cursor={{ fill: '#334155', opacity: 0.1 }}
                     contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#f8fafc', borderRadius: '8px' }}
                     itemStyle={{ color: '#818cf8' }}
                     formatter={(value: number) => [value, 'Clientes']}
                   />
-                  <Bar 
-                    dataKey="users" 
-                    fill="#818cf8" 
-                    radius={[4, 4, 0, 0]} 
+                  <Bar
+                    dataKey="users"
+                    fill="#818cf8"
+                    radius={[4, 4, 0, 0]}
                     barSize={32}
                   />
                 </BarChart>
