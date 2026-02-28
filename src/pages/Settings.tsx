@@ -32,7 +32,7 @@ export default function Settings() {
   return (
     <div className="space-y-8 max-w-6xl mx-auto">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Definições do Sistema</h2>
+        <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">Definições do Sistema</h2>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Gira as configurações globais, integrações e segurança do ArkCoder.</p>
       </div>
 
@@ -48,10 +48,10 @@ export default function Settings() {
                   "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap",
                   activeTab === tab.id
                     ? "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400"
-                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200"
+                    : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:text-slate-50 dark:hover:text-slate-200"
                 )}
               >
-                <tab.icon className={cn("h-4 w-4", activeTab === tab.id ? "text-indigo-600 dark:text-indigo-400" : "text-slate-400")} />
+                <tab.icon className={cn("h-4 w-4", activeTab === tab.id ? "text-indigo-600 dark:text-indigo-400" : "text-slate-400 dark:text-slate-500")} />
                 {tab.label}
               </button>
             ))}
@@ -62,35 +62,35 @@ export default function Settings() {
         <div className="flex-1 min-w-0">
           {activeTab === "plataforma" && (
             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+              <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
                 <CardHeader>
-                  <CardTitle className="text-xl text-slate-900 dark:text-white">Detalhes da Plataforma</CardTitle>
+                  <CardTitle className="text-xl text-slate-900 dark:text-slate-50">Detalhes da Plataforma</CardTitle>
                   <CardDescription className="text-slate-500 dark:text-slate-400">Configure as informações principais do seu SaaS.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-4">
                     <div className="grid gap-2">
-                      <Label htmlFor="saasName" className="text-slate-700 dark:text-slate-300">Nome do SaaS</Label>
-                      <Input id="saasName" defaultValue="ArkCoder" className="bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 dark:text-white max-w-md" />
+                      <Label htmlFor="saasName" className="text-slate-700 dark:text-slate-200">Nome do SaaS</Label>
+                      <Input id="saasName" defaultValue="ArkCoder" className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 dark:text-white max-w-md" />
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="contactEmail" className="text-slate-700 dark:text-slate-300">Email de Contato Geral</Label>
-                      <Input id="contactEmail" type="email" defaultValue="contato@arkcoder.com" className="bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 dark:text-white max-w-md" />
+                      <Label htmlFor="contactEmail" className="text-slate-700 dark:text-slate-200">Email de Contato Geral</Label>
+                      <Input id="contactEmail" type="email" defaultValue="contato@arkcoder.com" className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 dark:text-white max-w-md" />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label className="text-slate-700 dark:text-slate-300">Logotipo da Plataforma</Label>
-                    <div className="border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-lg p-8 flex flex-col items-center justify-center text-center hover:bg-slate-50 dark:hover:bg-slate-950/50 transition-colors cursor-pointer group">
+                    <Label className="text-slate-700 dark:text-slate-200">Logotipo da Plataforma</Label>
+                    <div className="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-lg p-8 flex flex-col items-center justify-center text-center hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:hover:bg-slate-950/50 transition-colors cursor-pointer group">
                       <div className="bg-indigo-50 dark:bg-indigo-500/10 p-3 rounded-full mb-4 group-hover:scale-110 transition-transform">
                         <UploadCloud className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
                       </div>
-                      <p className="text-sm font-medium text-slate-900 dark:text-white mb-1">Clique para fazer upload ou arraste e solte</p>
+                      <p className="text-sm font-medium text-slate-900 dark:text-slate-50 mb-1">Clique para fazer upload ou arraste e solte</p>
                       <p className="text-xs text-slate-500 dark:text-slate-400">SVG, PNG, JPG ou GIF (max. 2MB)</p>
                     </div>
                   </div>
                 </CardContent>
-                <CardFooter className="border-t border-slate-100 dark:border-slate-800 pt-6">
+                <CardFooter className="border-t border-slate-100 dark:border-slate-800/50 pt-6">
                   <Button className="bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">
                     Guardar Alterações
                   </Button>
@@ -102,21 +102,21 @@ export default function Settings() {
           {activeTab === "integracoes" && (
             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div>
-                <h3 className="text-lg font-medium text-slate-900 dark:text-white mb-1">Integrações de API</h3>
+                <h3 className="text-lg font-medium text-slate-900 dark:text-slate-50 mb-1">Integrações de API</h3>
                 <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">Configure os serviços externos conectados à plataforma.</p>
               </div>
 
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                 {/* Stripe / MercadoPago */}
-                <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 flex flex-col">
+                <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 flex flex-col">
                   <CardHeader className="pb-4">
                     <div className="flex justify-between items-start">
                       <div className="flex items-center gap-3">
                         <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-md">
-                          <CreditCard className="h-5 w-5 text-slate-700 dark:text-slate-300" />
+                          <CreditCard className="h-5 w-5 text-slate-700 dark:text-slate-200" />
                         </div>
                         <div>
-                          <CardTitle className="text-base text-slate-900 dark:text-white">Gateway de Pagamento</CardTitle>
+                          <CardTitle className="text-base text-slate-900 dark:text-slate-50">Gateway de Pagamento</CardTitle>
                           <CardDescription className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Stripe / MercadoPago</CardDescription>
                         </div>
                       </div>
@@ -128,27 +128,27 @@ export default function Settings() {
                   </CardHeader>
                   <CardContent className="flex-1">
                     <div className="space-y-2">
-                      <Label htmlFor="stripeKey" className="text-xs text-slate-600 dark:text-slate-400">API Key (Secret)</Label>
-                      <Input id="stripeKey" type="password" defaultValue="sk_live_51Nx..." className="bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 dark:text-white font-mono text-sm" />
+                      <Label htmlFor="stripeKey" className="text-xs text-slate-600 dark:text-slate-300">API Key (Secret)</Label>
+                      <Input id="stripeKey" type="password" defaultValue="sk_live_51Nx..." className="bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white font-mono text-sm" />
                     </div>
                   </CardContent>
-                  <CardFooter className="pt-4 border-t border-slate-100 dark:border-slate-800">
-                    <Button variant="outline" size="sm" className="w-full bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">
+                  <CardFooter className="pt-4 border-t border-slate-100 dark:border-slate-800/50">
+                    <Button variant="outline" size="sm" className="w-full bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200">
                       Atualizar Chave
                     </Button>
                   </CardFooter>
                 </Card>
 
                 {/* WhatsApp API */}
-                <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 flex flex-col">
+                <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 flex flex-col">
                   <CardHeader className="pb-4">
                     <div className="flex justify-between items-start">
                       <div className="flex items-center gap-3">
                         <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-md">
-                          <MessageSquare className="h-5 w-5 text-slate-700 dark:text-slate-300" />
+                          <MessageSquare className="h-5 w-5 text-slate-700 dark:text-slate-200" />
                         </div>
                         <div>
-                          <CardTitle className="text-base text-slate-900 dark:text-white">API do WhatsApp</CardTitle>
+                          <CardTitle className="text-base text-slate-900 dark:text-slate-50">API do WhatsApp</CardTitle>
                           <CardDescription className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Z-API / Evolution API</CardDescription>
                         </div>
                       </div>
@@ -160,11 +160,11 @@ export default function Settings() {
                   </CardHeader>
                   <CardContent className="flex-1">
                     <div className="space-y-2">
-                      <Label htmlFor="wppKey" className="text-xs text-slate-600 dark:text-slate-400">Token de Acesso</Label>
-                      <Input id="wppKey" placeholder="Cole o seu token aqui..." className="bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 dark:text-white font-mono text-sm" />
+                      <Label htmlFor="wppKey" className="text-xs text-slate-600 dark:text-slate-300">Token de Acesso</Label>
+                      <Input id="wppKey" placeholder="Cole o seu token aqui..." className="bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white font-mono text-sm" />
                     </div>
                   </CardContent>
-                  <CardFooter className="pt-4 border-t border-slate-100 dark:border-slate-800">
+                  <CardFooter className="pt-4 border-t border-slate-100 dark:border-slate-800/50">
                     <Button size="sm" className="w-full bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">
                       Salvar e Conectar
                     </Button>
@@ -172,15 +172,15 @@ export default function Settings() {
                 </Card>
 
                 {/* SendGrid */}
-                <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 flex flex-col">
+                <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 flex flex-col">
                   <CardHeader className="pb-4">
                     <div className="flex justify-between items-start">
                       <div className="flex items-center gap-3">
                         <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-md">
-                          <Mail className="h-5 w-5 text-slate-700 dark:text-slate-300" />
+                          <Mail className="h-5 w-5 text-slate-700 dark:text-slate-200" />
                         </div>
                         <div>
-                          <CardTitle className="text-base text-slate-900 dark:text-white">Serviço de E-mail</CardTitle>
+                          <CardTitle className="text-base text-slate-900 dark:text-slate-50">Serviço de E-mail</CardTitle>
                           <CardDescription className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">SendGrid / AWS SES</CardDescription>
                         </div>
                       </div>
@@ -192,12 +192,12 @@ export default function Settings() {
                   </CardHeader>
                   <CardContent className="flex-1">
                     <div className="space-y-2">
-                      <Label htmlFor="sendgridKey" className="text-xs text-slate-600 dark:text-slate-400">API Key</Label>
-                      <Input id="sendgridKey" type="password" defaultValue="SG.xyz123..." className="bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 dark:text-white font-mono text-sm" />
+                      <Label htmlFor="sendgridKey" className="text-xs text-slate-600 dark:text-slate-300">API Key</Label>
+                      <Input id="sendgridKey" type="password" defaultValue="SG.xyz123..." className="bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white font-mono text-sm" />
                     </div>
                   </CardContent>
-                  <CardFooter className="pt-4 border-t border-slate-100 dark:border-slate-800">
-                    <Button variant="outline" size="sm" className="w-full bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">
+                  <CardFooter className="pt-4 border-t border-slate-100 dark:border-slate-800/50">
+                    <Button variant="outline" size="sm" className="w-full bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200">
                       Atualizar Chave
                     </Button>
                   </CardFooter>
@@ -208,9 +208,9 @@ export default function Settings() {
 
           {/* Placeholders for other tabs */}
           {(activeTab === "perfil" || activeTab === "seguranca") && (
-            <div className="flex flex-col items-center justify-center p-12 border border-dashed border-slate-200 dark:border-slate-800 rounded-lg bg-white/50 dark:bg-slate-900/50">
+            <div className="flex flex-col items-center justify-center p-12 border border-dashed border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900">
               <SettingsIcon className="h-10 w-10 text-slate-300 dark:text-slate-600 mb-4" />
-              <h3 className="text-lg font-medium text-slate-900 dark:text-white">Em Desenvolvimento</h3>
+              <h3 className="text-lg font-medium text-slate-900 dark:text-slate-50">Em Desenvolvimento</h3>
               <p className="text-sm text-slate-500 dark:text-slate-400 text-center mt-2 max-w-sm">
                 As configurações de {activeTab === "perfil" ? "Perfil" : "Segurança"} estarão disponíveis na próxima atualização.
               </p>

@@ -96,24 +96,24 @@ const ActionMenu = () => {
       <Button 
         variant="ghost" 
         size="icon" 
-        className="h-8 w-8 text-slate-400 hover:text-slate-100 dark:hover:bg-slate-800"
+        className="h-8 w-8 text-slate-400 dark:text-slate-500 hover:text-slate-100 dark:hover:bg-slate-800"
         onClick={() => setIsOpen(!isOpen)}
       >
         <MoreHorizontal className="h-4 w-4" />
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-slate-900 ring-1 ring-black ring-opacity-5 dark:ring-slate-800 z-50 border border-slate-200 dark:border-slate-800">
+        <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-slate-900 ring-1 ring-black ring-opacity-5 dark:ring-slate-800 z-50 border border-slate-200 dark:border-slate-700">
           <div className="py-1" role="menu" aria-orientation="vertical">
-            <button className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
+            <button className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-800 flex items-center gap-2">
               <Eye className="h-4 w-4" />
               Visualizar PDF
             </button>
-            <button className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
+            <button className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-800 flex items-center gap-2">
               <Mail className="h-4 w-4" />
               Reenviar para Assinatura
             </button>
-            <button className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
+            <button className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-800 flex items-center gap-2">
               <Edit2 className="h-4 w-4" />
               Editar Detalhes
             </button>
@@ -190,7 +190,7 @@ export default function Contracts() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Contratos e Assinaturas</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">Contratos e Assinaturas</h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Gira os contratos de prestação de serviços com as imobiliárias.</p>
         </div>
         <Button className="shrink-0 bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 h-10 px-4">
@@ -201,7 +201,7 @@ export default function Contracts() {
 
       {/* Metrics Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm">
+        <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
               Contratos Ativos
@@ -209,11 +209,11 @@ export default function Contracts() {
             <CheckCircle2 className="h-4 w-4 text-emerald-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{totalAtivos}</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-slate-50">{totalAtivos}</div>
           </CardContent>
         </Card>
         
-        <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm">
+        <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
               Aguardando Assinatura
@@ -221,11 +221,11 @@ export default function Contracts() {
             <Clock className="h-4 w-4 text-amber-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{aguardando}</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-slate-50">{aguardando}</div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm">
+        <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
               A Expirar (30 dias)
@@ -233,11 +233,11 @@ export default function Contracts() {
             <FileWarning className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{expirando}</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-slate-50">{expirando}</div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm">
+        <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
               Cancelados/Inativos
@@ -245,20 +245,20 @@ export default function Contracts() {
             <XCircle className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{cancelados}</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-slate-50">{cancelados}</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Toolbar & Data Table */}
-      <Card className="border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden bg-white dark:bg-slate-900">
-        <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row gap-4 items-center justify-between">
+      <Card className="border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden bg-white dark:bg-slate-900">
+        <div className="p-4 border-b border-slate-100 dark:border-slate-800/50 flex flex-col sm:flex-row gap-4 items-center justify-between">
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <div className="relative w-full sm:w-72">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
               <Input 
                 placeholder="Procurar por imobiliária ou CNPJ..." 
-                className="pl-9 bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 h-9 text-sm dark:text-white"
+                className="pl-9 bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-700 h-9 text-sm dark:text-white"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -268,7 +268,7 @@ export default function Contracts() {
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <div className="relative">
               <select 
-                className="h-9 pl-3 pr-8 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm text-slate-700 dark:text-slate-300 appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="h-9 pl-3 pr-8 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-700 dark:text-slate-200 appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
               >
@@ -278,12 +278,12 @@ export default function Contracts() {
                 <option value="Expirando">Expirando</option>
                 <option value="Cancelado">Cancelado</option>
               </select>
-              <Filter className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
+              <Filter className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 dark:text-slate-500 pointer-events-none" />
             </div>
 
             <div className="relative">
               <select 
-                className="h-9 pl-3 pr-8 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm text-slate-700 dark:text-slate-300 appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="h-9 pl-3 pr-8 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-700 dark:text-slate-200 appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 value={planFilter}
                 onChange={(e) => setPlanFilter(e.target.value)}
               >
@@ -295,14 +295,14 @@ export default function Contracts() {
                 <option value="Premium">Premium</option>
                 <option value="Elite">Elite</option>
               </select>
-              <Filter className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
+              <Filter className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 dark:text-slate-500 pointer-events-none" />
             </div>
           </div>
         </div>
 
         <Table>
           <TableHeader>
-            <TableRow className="bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 border-slate-100 dark:border-slate-800">
+            <TableRow className="bg-slate-50 dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-slate-100 dark:border-slate-800/50">
               <TableHead className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider pl-4">ID do Contrato</TableHead>
               <TableHead className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">Cliente / Imobiliária</TableHead>
               <TableHead className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">Plano Subscrito</TableHead>
@@ -314,23 +314,23 @@ export default function Contracts() {
           </TableHeader>
           <TableBody>
             {filteredContracts.map((contract) => (
-              <TableRow key={contract.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 border-slate-100 dark:border-slate-800 transition-colors">
+              <TableRow key={contract.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:bg-slate-950/50 border-slate-100 dark:border-slate-800/50 transition-colors">
                 <TableCell className="pl-4 font-mono text-xs text-slate-500 dark:text-slate-400">
                   {contract.id}
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-col">
-                    <span className="text-sm font-medium text-slate-900 dark:text-slate-100">{contract.clientName}</span>
+                    <span className="text-sm font-medium text-slate-900 dark:text-slate-50">{contract.clientName}</span>
                     <span className="text-xs text-slate-500 dark:text-slate-400">{contract.clientDocument}</span>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{contract.plan}</span>
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-200">{contract.plan}</span>
                 </TableCell>
-                <TableCell className="text-sm text-slate-600 dark:text-slate-400">
+                <TableCell className="text-sm text-slate-600 dark:text-slate-300">
                   {contract.startDate}
                 </TableCell>
-                <TableCell className="text-sm text-slate-600 dark:text-slate-400">
+                <TableCell className="text-sm text-slate-600 dark:text-slate-300">
                   {contract.endDate}
                 </TableCell>
                 <TableCell>
