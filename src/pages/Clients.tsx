@@ -143,7 +143,7 @@ export default function Clients() {
         </div>
       </div>
 
-      <Card className="border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+      <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
         <div className="p-4 border-b border-slate-100 dark:border-slate-800/50 flex flex-col sm:flex-row gap-4 items-center justify-between bg-white dark:bg-slate-900">
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <Button variant="outline" className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium h-9">
@@ -161,7 +161,7 @@ export default function Clients() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
               <Input
                 placeholder="Pesquisar clientes..."
-                className="pl-9 bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-700 h-9 text-sm"
+                className="pl-9 bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 h-9 text-sm dark:text-white"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -172,13 +172,13 @@ export default function Clients() {
             </Button>
           </div>
         </div>
-        <Table>
+        <Table className="border-t border-slate-100 dark:border-slate-800">
           <TableHeader>
-            <TableRow className="bg-slate-50 dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-slate-100 dark:border-slate-800/50">
-              <TableHead className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">Imobiliária</TableHead>
-              <TableHead className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">Plano</TableHead>
-              <TableHead className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">Estado</TableHead>
-              <TableHead className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">Data de Adesão</TableHead>
+            <TableRow className="bg-slate-50 dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-slate-100 dark:border-slate-800">
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">Imobiliária</TableHead>
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">Plano</TableHead>
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">Estado</TableHead>
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">Data de Adesão</TableHead>
               <TableHead className="w-12"></TableHead>
             </TableRow>
           </TableHeader>
@@ -199,7 +199,7 @@ export default function Clients() {
               filteredClients.map((client) => (
                 <TableRow
                   key={client.id}
-                  className="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+                  className="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors border-slate-100 dark:border-slate-800"
                   onClick={() => setSelectedClient(client)}
                 >
                   <TableCell>
@@ -259,12 +259,12 @@ export default function Clients() {
         <>
           {/* Overlay (Fundo Escuro) - Clicar nele também fecha a sidebar */}
           <div 
-            className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-40 transition-opacity"
+            className="fixed inset-0 bg-slate-950/70 z-40 transition-opacity"
             onClick={() => setSelectedClient(null)}
           />
           
           {/* Painel da Sidebar Fixado na Direita */}
-          <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-96 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-700 shadow-2xl flex flex-col overflow-y-auto animate-in slide-in-from-right-8 duration-300">
+          <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-96 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-y-auto animate-in slide-in-from-right-8 duration-300">
             <div className="p-6 border-b border-slate-100 dark:border-slate-800/50 flex justify-between items-start sticky top-0 bg-white dark:bg-slate-900 backdrop-blur-md z-10">
               <div>
                 <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">{selectedClient.name}</h2>
@@ -350,6 +350,7 @@ export default function Clients() {
                   placeholder="Ex: TR Imóveis"
                   value={newCompany.name}
                   onChange={(e) => setNewCompany({ ...newCompany, name: e.target.value })}
+                  className="bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
                   required
                 />
                 {newCompany.name && (
@@ -361,7 +362,7 @@ export default function Clients() {
               <div>
                 <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1">Plano Inicial</label>
                 <select
-                  className="flex h-10 w-full rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 dark:placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex h-10 w-full rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-3 py-2 text-sm text-slate-900 dark:text-white ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 dark:placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   value={newCompany.plan}
                   onChange={(e) => setNewCompany({ ...newCompany, plan: e.target.value })}
                 >
