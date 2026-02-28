@@ -1,25 +1,34 @@
-// src/pages/Login.tsx
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Building2, Lock, Mail, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { supabase } from "../lib/supabase"
 
 export default function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [errorMsg, setErrorMsg] = useState("")
   const navigate = useNavigate()
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-    
-    // Simulação de login (depois integraremos com Supabase)
-    setTimeout(() => {
-      setIsLoading(false)
+    setErrorMsg("")
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+
+    setIsLoading(false)
+
+    if (error) {
+      setErrorMsg("Credenciais inválidas. Verifique seu e-mail e senha.")
+    } else {
       navigate("/")
-    }, 1500)
+    }
   }
 
   return (
@@ -36,14 +45,20 @@ export default function Login() {
           <p className="text-slate-400 text-sm mt-1">Acesso restrito ao Super Administrador</p>
         </div>
 
+        {errorMsg && (
+          <div className="mb-6 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm text-center">
+            {errorMsg}
+          </div>
+        )}
+
         <form onSubmit={handleLogin} className="space-y-5">
           <div className="space-y-2">
             <label className="text-sm font-medium text-slate-300 ml-1">E-mail</label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500" />
-              <Input 
-                type="email" 
-                placeholder="admin@arkcoder.com" 
+              <Input
+                type="email"
+                placeholder="admin@arkcoder.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -58,9 +73,9 @@ export default function Login() {
             </div>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500" />
-              <Input 
-                type="password" 
-                placeholder="••••••••" 
+              <Input
+                type="password"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -69,8 +84,8 @@ export default function Login() {
             </div>
           </div>
 
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             disabled={isLoading}
             className="w-full h-12 bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-base rounded-lg transition-all mt-4"
           >
