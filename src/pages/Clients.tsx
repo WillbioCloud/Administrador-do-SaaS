@@ -256,74 +256,83 @@ export default function Clients() {
 
       {/* Detalhes do Cliente (Sidebar Lateral) */}
       {selectedClient && (
-        <div className="w-full md:w-96 bg-white border-l border-slate-200 shadow-2xl z-20 flex flex-col overflow-y-auto animate-in slide-in-from-right-8 duration-300 fixed md:relative right-0 top-0 h-full">
-          <div className="p-6 border-b border-slate-100 flex justify-between items-start sticky top-0 bg-white/90 backdrop-blur-md">
-            <div>
-              <h2 className="text-xl font-bold text-slate-800">{selectedClient.name}</h2>
-              <div className="flex items-center gap-2 mt-2">
-                <Badge variant="secondary" className="bg-slate-100 text-slate-700 uppercase text-[10px] tracking-wider">{selectedClient.plan}</Badge>
-                <Badge className={selectedClient.active ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-red-50 text-red-700 border-red-200"}>
-                  {selectedClient.active ? "Ativo" : "Suspenso"}
-                </Badge>
-              </div>
-            </div>
-            <Button variant="ghost" size="icon" onClick={() => setSelectedClient(null)} className="text-slate-400 hover:text-slate-600 rounded-full">
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
-
-          <div className="p-6 flex-1 flex flex-col gap-6">
-            {/* Informações Essenciais */}
-            <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100">
-              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                <Building2 className="h-4 w-4" />
-                Dados da Imobiliária
-              </h3>
-
-              <div className="space-y-4">
-                <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Subdomínio (Acesso)</p>
-                  <a href={`https://${selectedClient.slug}.seusaas.com`} target="_blank" rel="noreferrer" className="text-sm font-semibold text-brand-600 hover:underline flex items-center gap-1">
-                    {selectedClient.slug}.seusaas.com
-                  </a>
-                </div>
-
-                <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Cliente Desde</p>
-                  <p className="text-sm font-medium text-slate-800 flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-slate-400" />
-                    {new Date(selectedClient.created_at).toLocaleDateString("pt-BR")}
-                  </p>
+        <>
+          {/* Overlay (Fundo Escuro) - Clicar nele também fecha a sidebar */}
+          <div 
+            className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-40 transition-opacity"
+            onClick={() => setSelectedClient(null)}
+          />
+          
+          {/* Painel da Sidebar Fixado na Direita */}
+          <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-96 bg-white border-l border-slate-200 shadow-2xl flex flex-col overflow-y-auto animate-in slide-in-from-right-8 duration-300">
+            <div className="p-6 border-b border-slate-100 flex justify-between items-start sticky top-0 bg-white/90 backdrop-blur-md z-10">
+              <div>
+                <h2 className="text-xl font-bold text-slate-800">{selectedClient.name}</h2>
+                <div className="flex items-center gap-2 mt-2">
+                  <Badge variant="secondary" className="bg-slate-100 text-slate-700 uppercase text-[10px] tracking-wider">{selectedClient.plan}</Badge>
+                  <Badge className={selectedClient.active ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-red-50 text-red-700 border-red-200"}>
+                    {selectedClient.active ? "Ativo" : "Suspenso"}
+                  </Badge>
                 </div>
               </div>
+              <Button variant="ghost" size="icon" onClick={() => setSelectedClient(null)} className="text-slate-400 hover:text-slate-600 rounded-full">
+                <X className="h-5 w-5" />
+              </Button>
             </div>
 
-            <div className="bg-indigo-50/50 border border-indigo-100 p-4 rounded-xl">
-              <p className="text-xs text-indigo-800 font-medium">Métricas detalhadas (MRR, Total de Imóveis e Usuários) serão exibidas aqui nas próximas atualizações do painel.</p>
-            </div>
+            <div className="p-6 flex-1 flex flex-col gap-6">
+              {/* Informações Essenciais */}
+              <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <Building2 className="h-4 w-4" />
+                  Dados da Imobiliária
+                </h3>
 
-            {/* Ações */}
-            <div className="pt-4 mt-auto flex flex-col gap-3">
-              <Button
-                onClick={() => handleToggleStatus(selectedClient)}
-                disabled={isUpdatingStatus}
-                variant="outline"
-                className={selectedClient.active ? "text-amber-600 border-amber-200 hover:bg-amber-50" : "text-emerald-600 border-emerald-200 hover:bg-emerald-50"}
-              >
-                {isUpdatingStatus ? "Atualizando..." : (selectedClient.active ? "Bloquear / Suspender Acesso" : "Reativar Acesso do Cliente")}
-              </Button>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Subdomínio (Acesso)</p>
+                    <a href={`https://${selectedClient.slug}.seusaas.com`} target="_blank" rel="noreferrer" className="text-sm font-semibold text-brand-600 hover:underline flex items-center gap-1">
+                      {selectedClient.slug}.seusaas.com
+                    </a>
+                  </div>
 
-              <Button
-                onClick={() => handleDeleteCompany(selectedClient.id)}
-                disabled={isDeleting}
-                variant="outline"
-                className="text-red-600 border-red-200 hover:text-red-700 hover:bg-red-50"
-              >
-                {isDeleting ? "Excluindo..." : "Excluir Empresa Definitivamente"}
-              </Button>
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Cliente Desde</p>
+                    <p className="text-sm font-medium text-slate-800 flex items-center gap-2">
+                      <Calendar className="h-4 w-4 text-slate-400" />
+                      {new Date(selectedClient.created_at).toLocaleDateString("pt-BR")}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-indigo-50/50 border border-indigo-100 p-4 rounded-xl">
+                <p className="text-xs text-indigo-800 font-medium">Métricas detalhadas (MRR, Total de Imóveis e Usuários) serão exibidas aqui nas próximas atualizações do painel.</p>
+              </div>
+
+              {/* Ações */}
+              <div className="pt-4 mt-auto flex flex-col gap-3">
+                <Button
+                  onClick={() => handleToggleStatus(selectedClient)}
+                  disabled={isUpdatingStatus}
+                  variant="outline"
+                  className={selectedClient.active ? "text-amber-600 border-amber-200 hover:bg-amber-50" : "text-emerald-600 border-emerald-200 hover:bg-emerald-50"}
+                >
+                  {isUpdatingStatus ? "Atualizando..." : (selectedClient.active ? "Bloquear / Suspender Acesso" : "Reativar Acesso do Cliente")}
+                </Button>
+
+                <Button
+                  onClick={() => handleDeleteCompany(selectedClient.id)}
+                  disabled={isDeleting}
+                  variant="outline"
+                  className="text-red-600 border-red-200 hover:text-red-700 hover:bg-red-50"
+                >
+                  {isDeleting ? "Excluindo..." : "Excluir Empresa Definitivamente"}
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
 
       {/* Modal Nova Empresa */}
