@@ -211,7 +211,7 @@ export default function Clients() {
                       </Avatar>
                       <div>
                         <p className="font-medium text-slate-900 dark:text-slate-50">{client.name}</p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">{client.slug}.seusaas.com</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{client.slug}.elevatiovendas.com</p>
                       </div>
                     </div>
                   </TableCell>
@@ -291,8 +291,8 @@ export default function Clients() {
                 <div className="space-y-4">
                   <div>
                     <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Subdomínio (Acesso)</p>
-                    <a href={`https://${selectedClient.slug}.seusaas.com`} target="_blank" rel="noreferrer" className="text-sm font-semibold text-brand-600 hover:underline flex items-center gap-1">
-                      {selectedClient.slug}.seusaas.com
+                    <a href={`https://${selectedClient.slug}.elevatiovendas.com`} target="_blank" rel="noreferrer" className="text-sm font-semibold text-brand-600 hover:underline flex items-center gap-1">
+                      {selectedClient.slug}.elevatiovendas.com
                     </a>
                   </div>
 
@@ -355,7 +355,7 @@ export default function Clients() {
                 />
                 {newCompany.name && (
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
-                    Subdomínio gerado: <strong className="text-brand-600">{newCompany.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")}</strong>.seusaas.com
+                    Subdomínio gerado: <strong className="text-brand-600">{newCompany.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")}</strong>.elevatiovendas.com
                   </p>
                 )}
               </div>
