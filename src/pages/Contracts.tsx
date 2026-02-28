@@ -86,7 +86,7 @@ const ActionMenu = ({
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-slate-900 ring-1 ring-black ring-opacity-5 dark:ring-slate-800 z-50 border border-slate-200 dark:border-slate-700">
+        <div className="fixed right-8 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-slate-900 ring-1 ring-black ring-opacity-5 dark:ring-slate-800 z-[100] border border-slate-200 dark:border-slate-700">
           <div className="py-1" role="menu" aria-orientation="vertical">
             <button className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-800 flex items-center gap-2">
               <Eye className="h-4 w-4" />
