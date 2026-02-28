@@ -7,7 +7,6 @@ import {
   Building2,
   Calendar,
   X,
-  Users,
   ChevronDown,
   Download
 } from "lucide-react"
@@ -15,7 +14,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { supabase } from "@/lib/supabase"
 
@@ -29,6 +28,8 @@ export default function Clients() {
   const [isNewClientModalOpen, setIsNewClientModalOpen] = useState(false)
   const [newCompany, setNewCompany] = useState({ name: "", plan: "business" })
   const [isCreating, setIsCreating] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false)
 
   // Busca as empresas no banco de dados
   const fetchCompanies = async () => {
@@ -80,6 +81,39 @@ export default function Clients() {
       fetchCompanies() // Recarrega a lista
     }
     setIsCreating(false)
+  }
+
+  // Função para Deletar Empresa
+  const handleDeleteCompany = async (id: string) => {
+    if (!window.confirm("ATENÇÃO: Tem certeza que deseja excluir esta empresa definitivamente? Se houver corretores ou imóveis vinculados, a exclusão poderá falhar pelo banco de dados para evitar perda de dados. Nesses casos, prefira 'Suspender'.")) return
+
+    setIsDeleting(true)
+    const { error } = await supabase.from("companies").delete().eq("id", id)
+    setIsDeleting(false)
+
+    if (error) {
+      alert("Erro ao excluir. (Possivelmente existem dados vinculados a esta empresa): " + error.message)
+    } else {
+      setSelectedClient(null)
+      fetchCompanies()
+    }
+  }
+
+  // Função para Suspender/Ativar
+  const handleToggleStatus = async (client: any) => {
+    setIsUpdatingStatus(true)
+    const { error } = await supabase
+      .from("companies")
+      .update({ active: !client.active })
+      .eq("id", client.id)
+    setIsUpdatingStatus(false)
+
+    if (error) {
+      alert("Erro ao atualizar status: " + error.message)
+    } else {
+      setSelectedClient({ ...client, active: !client.active })
+      fetchCompanies()
+    }
   }
 
   const filteredClients = clients.filter((client) => {
@@ -220,85 +254,73 @@ export default function Clients() {
         </div>
       </Card>
 
+      {/* Detalhes do Cliente (Sidebar Lateral) */}
       {selectedClient && (
-        <div className="fixed inset-0 z-50 overflow-hidden">
-          <div className="absolute inset-0 bg-slate-900/50 transition-opacity backdrop-blur-sm" onClick={() => setSelectedClient(null)} />
-          <div className="fixed inset-y-0 right-0 z-50 flex max-w-full pl-10">
-            <div className="w-screen max-w-md transform transition-transform duration-300 ease-in-out">
-              <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-2xl">
-                <div className="px-6 py-6 bg-slate-50 border-b border-slate-200">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-4">
-                      <Avatar className="h-14 w-14 border border-slate-200 shadow-sm">
-                        <AvatarFallback className="bg-white text-slate-700 text-xl font-medium">
-                          {selectedClient.name?.substring(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <h2 className="text-xl font-semibold text-slate-900">{selectedClient.name}</h2>
-                        <p className="text-sm text-slate-500 font-mono mt-1">{selectedClient.slug}.seusaas.com</p>
-                      </div>
-                    </div>
-                    <Button variant="ghost" size="icon" onClick={() => setSelectedClient(null)} className="text-slate-400 hover:text-slate-600">
-                      <X className="h-5 w-5" />
-                    </Button>
-                  </div>
+        <div className="w-full md:w-96 bg-white border-l border-slate-200 shadow-2xl z-20 flex flex-col overflow-y-auto animate-in slide-in-from-right-8 duration-300 fixed md:relative right-0 top-0 h-full">
+          <div className="p-6 border-b border-slate-100 flex justify-between items-start sticky top-0 bg-white/90 backdrop-blur-md">
+            <div>
+              <h2 className="text-xl font-bold text-slate-800">{selectedClient.name}</h2>
+              <div className="flex items-center gap-2 mt-2">
+                <Badge variant="secondary" className="bg-slate-100 text-slate-700 uppercase text-[10px] tracking-wider">{selectedClient.plan}</Badge>
+                <Badge className={selectedClient.active ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-red-50 text-red-700 border-red-200"}>
+                  {selectedClient.active ? "Ativo" : "Suspenso"}
+                </Badge>
+              </div>
+            </div>
+            <Button variant="ghost" size="icon" onClick={() => setSelectedClient(null)} className="text-slate-400 hover:text-slate-600 rounded-full">
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
+
+          <div className="p-6 flex-1 flex flex-col gap-6">
+            {/* Informações Essenciais */}
+            <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                <Building2 className="h-4 w-4" />
+                Dados da Imobiliária
+              </h3>
+
+              <div className="space-y-4">
+                <div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Subdomínio (Acesso)</p>
+                  <a href={`https://${selectedClient.slug}.seusaas.com`} target="_blank" rel="noreferrer" className="text-sm font-semibold text-brand-600 hover:underline flex items-center gap-1">
+                    {selectedClient.slug}.seusaas.com
+                  </a>
                 </div>
 
-                <div className="relative flex-1 px-6 py-8 space-y-8">
-                  <div className="grid grid-cols-3 gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                    <div>
-                      <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Estado</p>
-                      <Badge className={`mt-2 ${selectedClient.active ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-red-50 text-red-700 border-red-200"}`}>
-                        {selectedClient.active ? "Ativo" : "Inativo"}
-                      </Badge>
-                    </div>
-                    <div>
-                      <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Plano</p>
-                      <Badge className="mt-2" variant="secondary">
-                        {selectedClient.plan}
-                      </Badge>
-                    </div>
-                    <div>
-                      <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Criada em</p>
-                      <p className="mt-2 text-sm font-semibold text-slate-900">{new Date(selectedClient.created_at).toLocaleDateString("pt-BR")}</p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="text-sm font-semibold text-slate-900 border-b border-slate-100 pb-2 mb-4">Resumo</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      <Card className="bg-white border-slate-200 shadow-sm">
-                        <CardContent className="p-4">
-                          <div className="flex items-center gap-2 text-slate-500 mb-2">
-                            <Building2 className="h-4 w-4" />
-                            <span className="text-sm font-medium">Slug</span>
-                          </div>
-                          <p className="text-base font-bold text-slate-900 break-all">{selectedClient.slug}</p>
-                        </CardContent>
-                      </Card>
-                      <Card className="bg-white border-slate-200 shadow-sm">
-                        <CardContent className="p-4">
-                          <div className="flex items-center gap-2 text-slate-500 mb-2">
-                            <Users className="h-4 w-4" />
-                            <span className="text-sm font-medium">ID</span>
-                          </div>
-                          <p className="text-base font-bold text-slate-900 break-all">{selectedClient.id}</p>
-                        </CardContent>
-                      </Card>
-                      <Card className="bg-white border-slate-200 shadow-sm col-span-2">
-                        <CardContent className="p-4">
-                          <div className="flex items-center gap-2 text-slate-500 mb-2">
-                            <Calendar className="h-4 w-4" />
-                            <span className="text-sm font-medium">Última atualização</span>
-                          </div>
-                          <p className="text-base font-bold text-slate-900">{selectedClient.updated_at ? new Date(selectedClient.updated_at).toLocaleString("pt-BR") : "Não disponível"}</p>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </div>
+                <div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Cliente Desde</p>
+                  <p className="text-sm font-medium text-slate-800 flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-slate-400" />
+                    {new Date(selectedClient.created_at).toLocaleDateString("pt-BR")}
+                  </p>
                 </div>
               </div>
+            </div>
+
+            <div className="bg-indigo-50/50 border border-indigo-100 p-4 rounded-xl">
+              <p className="text-xs text-indigo-800 font-medium">Métricas detalhadas (MRR, Total de Imóveis e Usuários) serão exibidas aqui nas próximas atualizações do painel.</p>
+            </div>
+
+            {/* Ações */}
+            <div className="pt-4 mt-auto flex flex-col gap-3">
+              <Button
+                onClick={() => handleToggleStatus(selectedClient)}
+                disabled={isUpdatingStatus}
+                variant="outline"
+                className={selectedClient.active ? "text-amber-600 border-amber-200 hover:bg-amber-50" : "text-emerald-600 border-emerald-200 hover:bg-emerald-50"}
+              >
+                {isUpdatingStatus ? "Atualizando..." : (selectedClient.active ? "Bloquear / Suspender Acesso" : "Reativar Acesso do Cliente")}
+              </Button>
+
+              <Button
+                onClick={() => handleDeleteCompany(selectedClient.id)}
+                disabled={isDeleting}
+                variant="outline"
+                className="text-red-600 border-red-200 hover:text-red-700 hover:bg-red-50"
+              >
+                {isDeleting ? "Excluindo..." : "Excluir Empresa Definitivamente"}
+              </Button>
             </div>
           </div>
         </div>
