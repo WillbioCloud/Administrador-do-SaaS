@@ -16,19 +16,35 @@ export default function Login() {
     e.preventDefault()
     setIsLoading(true)
     setErrorMsg("")
-
+    
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
 
-    setIsLoading(false)
-
     if (error) {
       setErrorMsg("Credenciais inválidas. Verifique seu e-mail e senha.")
-    } else {
-      navigate("/")
+      setIsLoading(false)
+      return
     }
+
+    // VERIFICAÇÃO VIP: Checa se o usuário logado pertence à "Matriz - Hub SaaS"
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('companies(slug)')
+      .eq('id', data.user.id)
+      .single()
+
+    // @ts-ignore - Ignorando o erro de tipagem de junção do supabase
+    if (profile?.companies?.slug !== 'hub-saas') {
+      await supabase.auth.signOut() // Desloga o penetra imediatamente
+      setErrorMsg("Acesso negado. Esta área é restrita aos administradores do Hub SaaS.")
+      setIsLoading(false)
+      return
+    }
+
+    setIsLoading(false)
+    navigate("/")
   }
 
   return (
