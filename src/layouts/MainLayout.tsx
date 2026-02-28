@@ -17,8 +17,6 @@ import {
   ChevronRight,
   Home,
   Briefcase,
-  PieChart,
-  FolderOpen,
   HelpCircle,
   LogOut,
   User,
@@ -67,7 +65,6 @@ export default function MainLayout() {
   const profileRef = useRef<HTMLDivElement>(null)
   const notificationsRef = useRef<HTMLDivElement>(null)
 
-  // Apply dark mode to the HTML root element so it works globally (including portals)
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add("dark")
@@ -76,7 +73,6 @@ export default function MainLayout() {
     }
   }, [isDark])
 
-  // Keyboard shortcut for search (Ctrl+F or Cmd+F)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
@@ -88,7 +84,6 @@ export default function MainLayout() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
 
-  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
@@ -102,7 +97,6 @@ export default function MainLayout() {
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
-  // Helper to generate breadcrumbs
   const getBreadcrumbs = () => {
     const path = location.pathname
     if (path === "/") return ["Dashboard", "Visão Geral"]
@@ -118,20 +112,23 @@ export default function MainLayout() {
   const breadcrumbs = getBreadcrumbs()
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-sans flex transition-colors duration-200">
+    // CORREÇÃO 1: h-screen e overflow-hidden para travar a rolagem da página inteira
+    <div className="h-screen w-full flex overflow-hidden bg-[#f8f9fa] dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-sans transition-colors duration-200">
+      
       {/* Mobile sidebar backdrop */}
       <div className={cn("fixed inset-0 z-50 bg-slate-900/80 lg:hidden", sidebarOpen ? "block" : "hidden")} onClick={() => setSidebarOpen(false)} />
       
       {/* Sidebar */}
-      <div className={cn("fixed inset-y-0 left-0 z-50 w-64 transform bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:block flex flex-col", sidebarOpen ? "translate-x-0" : "-translate-x-full")}>
+      {/* CORREÇÃO 2: lg:flex no lugar de lg:block para manter a estrutura da coluna */}
+      <div className={cn("fixed inset-y-0 left-0 z-50 w-64 transform bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:flex flex-col", sidebarOpen ? "translate-x-0" : "-translate-x-full")}>
         <div className="flex h-16 shrink-0 items-center px-6">
           <div className="flex items-center gap-3 w-full">
             <div className="bg-slate-900 dark:bg-indigo-600 text-white p-1.5 rounded-md">
               <Building2 className="h-5 w-5" />
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-semibold tracking-tight leading-tight">ImobiSaaS</span>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">v1.0.1</span>
+              <span className="text-sm font-semibold tracking-tight leading-tight">ArkCoder</span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">Super Admin</span>
             </div>
             <ChevronDown className="h-4 w-4 ml-auto text-slate-400" />
           </div>
@@ -140,6 +137,7 @@ export default function MainLayout() {
           </Button>
         </div>
 
+        {/* Área de rolagem apenas para os links de navegação */}
         <div className="flex-1 overflow-y-auto py-4">
           {navigation.map((section, idx) => (
             <div key={section.title} className={cn("px-4", idx > 0 ? "mt-6" : "")}>
@@ -175,8 +173,8 @@ export default function MainLayout() {
           ))}
         </div>
 
-        {/* User Profile at bottom of sidebar */}
-        <div className="p-4 border-t border-slate-100 dark:border-slate-800 relative" ref={profileRef}>
+        {/* User Profile at bottom of sidebar (agora fixo no fundo) */}
+        <div className="p-4 border-t border-slate-100 dark:border-slate-800 relative shrink-0" ref={profileRef}>
           <div 
             className="flex items-center gap-3 p-2 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors border border-slate-100 dark:border-slate-800"
             onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -186,13 +184,12 @@ export default function MainLayout() {
               <AvatarFallback>AD</AvatarFallback>
             </Avatar>
             <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">Admin User</span>
-              <span className="text-xs text-slate-500 dark:text-slate-400 truncate">admin@imobisaas.com</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">Super Admin</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 truncate">admin@arkcoder.com</span>
             </div>
             <ChevronDown className={cn("h-4 w-4 text-slate-400 shrink-0 transition-transform", isProfileOpen && "rotate-180")} />
           </div>
 
-          {/* Profile Dropdown */}
           {isProfileOpen && (
             <div className="absolute bottom-full left-4 right-4 mb-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-lg overflow-hidden z-50">
               <div className="p-1">
@@ -206,20 +203,10 @@ export default function MainLayout() {
                   <User className="h-4 w-4" />
                   Meu Perfil
                 </button>
-                <button 
-                  onClick={() => {
-                    navigate("/settings")
-                    setIsProfileOpen(false)
-                  }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors"
-                >
-                  <Settings className="h-4 w-4" />
-                  Configurações
-                </button>
                 <div className="h-px bg-slate-200 dark:bg-slate-800 my-1" />
                 <button 
                   onClick={() => {
-                    alert("Sessão terminada (Simulação)")
+                    navigate("/login")
                     setIsProfileOpen(false)
                   }}
                   className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors"
@@ -234,7 +221,8 @@ export default function MainLayout() {
       </div>
 
       {/* Main column */}
-      <div className="flex flex-1 flex-col min-w-0 min-h-screen">
+      {/* CORREÇÃO 3: h-screen e overflow-hidden limitam a área principal */}
+      <div className="flex flex-1 flex-col min-w-0 h-screen overflow-hidden">
         <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" className="-m-2.5 p-2.5 text-slate-700 dark:text-slate-300 lg:hidden" onClick={() => setSidebarOpen(true)}>
@@ -242,7 +230,6 @@ export default function MainLayout() {
               <Menu className="h-6 w-6" aria-hidden="true" />
             </Button>
             
-            {/* Breadcrumbs */}
             <div className="hidden sm:flex items-center text-sm text-slate-500 dark:text-slate-400">
               <div className="flex items-center gap-2">
                 <div className="flex items-center justify-center w-5 h-5 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
@@ -261,13 +248,12 @@ export default function MainLayout() {
           </div>
 
           <div className="flex items-center gap-x-4">
-            {/* Search */}
             <div className="relative hidden md:block w-64">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
               <Input
                 ref={searchInputRef}
                 type="search"
-                placeholder="Search"
+                placeholder="Pesquisar (Ctrl+F)"
                 className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 pl-9 pr-8 h-9 text-sm rounded-md focus-visible:ring-1 focus-visible:ring-slate-300 dark:focus-visible:ring-slate-600 dark:text-slate-100"
               />
               <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center w-5 h-5 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-[10px] font-medium text-slate-400 dark:text-slate-500 pointer-events-none">
@@ -275,7 +261,6 @@ export default function MainLayout() {
               </div>
             </div>
 
-            {/* New Task Button */}
             <Button 
               variant="outline" 
               size="sm" 
@@ -283,7 +268,7 @@ export default function MainLayout() {
               onClick={() => setIsNewTaskOpen(true)}
             >
               <span className="flex items-center justify-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded px-1.5 py-0.5 text-xs mr-2 font-medium">12</span>
-              New Task
+              Tarefas
             </Button>
 
             <div className="flex items-center gap-1 border border-slate-200 dark:border-slate-700 rounded-md p-0.5 bg-slate-50 dark:bg-slate-800">
@@ -295,7 +280,6 @@ export default function MainLayout() {
               </Button>
             </div>
 
-            {/* Notifications */}
             <div className="relative" ref={notificationsRef}>
               <Button 
                 variant="ghost" 
@@ -315,7 +299,7 @@ export default function MainLayout() {
                 <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-lg overflow-hidden z-50">
                   <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                     <h3 className="font-semibold text-slate-900 dark:text-white">Notificações</h3>
-                    <span className="text-xs text-indigo-600 dark:text-indigo-400 font-medium cursor-pointer hover:underline">Marcar todas como lidas</span>
+                    <span className="text-xs text-indigo-600 dark:text-indigo-400 font-medium cursor-pointer hover:underline">Marcar como lidas</span>
                   </div>
                   <div className="max-h-80 overflow-y-auto">
                     <div className="p-4 border-b border-slate-100 dark:border-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer bg-indigo-50/30 dark:bg-indigo-500/5">
@@ -325,38 +309,14 @@ export default function MainLayout() {
                         </div>
                         <div>
                           <p className="text-sm font-medium text-slate-900 dark:text-slate-100">Novo cliente registado</p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">A Imobiliária Central acabou de assinar o plano Profissional.</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">A Imobiliária Central assinou o plano Profissional.</p>
                           <p className="text-[10px] text-slate-400 mt-1">há 5 minutos</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-4 border-b border-slate-100 dark:border-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer">
-                      <div className="flex gap-3">
-                        <div className="h-8 w-8 rounded-full bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center shrink-0">
-                          <FileText className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-slate-900 dark:text-slate-100">Contrato a expirar</p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">O contrato com a Morada Nova expira em 5 dias.</p>
-                          <p className="text-[10px] text-slate-400 mt-1">há 2 horas</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer">
-                      <div className="flex gap-3">
-                        <div className="h-8 w-8 rounded-full bg-red-100 dark:bg-red-900/50 flex items-center justify-center shrink-0">
-                          <HelpCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-slate-900 dark:text-slate-100">Novo Ticket Urgente</p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Elite Imóveis abriu um ticket com prioridade alta.</p>
-                          <p className="text-[10px] text-slate-400 mt-1">há 1 dia</p>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div className="p-3 border-t border-slate-100 dark:border-slate-800 text-center">
-                    <button className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">Ver todas as notificações</button>
+                    <button className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">Ver todas</button>
                   </div>
                 </div>
               )}
@@ -364,6 +324,7 @@ export default function MainLayout() {
           </div>
         </header>
 
+        {/* Esta área agora rola independentemente! */}
         <main className="flex-1 bg-[#f8f9fa] dark:bg-slate-950 overflow-y-auto">
           <div className="py-6 px-4 sm:px-6 lg:px-8 max-w-[1600px] mx-auto">
             <Outlet />
@@ -371,7 +332,6 @@ export default function MainLayout() {
         </main>
       </div>
 
-      {/* New Task Modal */}
       {isNewTaskOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsNewTaskOpen(false)} />
@@ -411,4 +371,3 @@ export default function MainLayout() {
     </div>
   )
 }
-

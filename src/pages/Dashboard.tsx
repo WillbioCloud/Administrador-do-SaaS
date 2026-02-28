@@ -3,7 +3,7 @@ import {
   Building2, 
   Users, 
   CreditCard, 
-  TrendingUp,
+  UserMinus,
   ArrowUpRight,
   ArrowDownRight
 } from "lucide-react"
@@ -17,132 +17,137 @@ import {
   Tooltip, 
   ResponsiveContainer,
   BarChart,
-  Bar,
-  Legend
+  Bar
 } from "recharts"
 
 const revenueData = [
-  { name: "Jan", revenue: 4000 },
-  { name: "Fev", revenue: 3000 },
-  { name: "Mar", revenue: 2000 },
-  { name: "Abr", revenue: 2780 },
-  { name: "Mai", revenue: 1890 },
-  { name: "Jun", revenue: 2390 },
-  { name: "Jul", revenue: 3490 },
+  { name: "Jan", revenue: 45000 },
+  { name: "Fev", revenue: 52000 },
+  { name: "Mar", revenue: 48000 },
+  { name: "Abr", revenue: 61000 },
+  { name: "Mai", revenue: 75000 },
+  { name: "Jun", revenue: 86000 },
+  { name: "Jul", revenue: 105000 },
 ]
 
+// Seus planos oficiais atualizados
 const planData = [
-  { name: "Starter", users: 400 },
-  { name: "Pro", users: 300 },
-  { name: "Enterprise", users: 200 },
+  { name: "Starter", users: 120 },
+  { name: "Basic", users: 200 },
+  { name: "Profissional", users: 450 },
+  { name: "Business", users: 300 },
+  { name: "Premium", users: 150 },
+  { name: "Elite", users: 80 },
 ]
 
 const stats = [
   {
     name: "Total de Clientes Ativos",
-    value: "2,420",
+    value: "1.300",
     icon: Users,
-    change: "+4.75%",
+    change: "+12.5%",
     changeType: "positive",
+    description: "em relação ao mês passado"
   },
   {
     name: "Receita Recorrente (MRR)",
-    value: "€ 45,231.89",
+    value: "R$ 105.000,00",
     icon: CreditCard,
-    change: "+54.02%",
+    change: "+18.2%",
     changeType: "positive",
+    description: "em relação ao mês passado"
   },
   {
     name: "Novos Clientes (Mês)",
     value: "142",
     icon: Building2,
-    change: "-1.39%",
-    changeType: "negative",
+    change: "+5.4%",
+    changeType: "positive",
+    description: "em relação ao mês passado"
   },
   {
-    name: "Taxa de Churn",
-    value: "1.2%",
-    icon: TrendingUp,
-    change: "+0.1%",
-    changeType: "negative",
+    name: "Cancelamentos (Mês)",
+    value: "12",
+    icon: UserMinus,
+    change: "-2.1%", 
+    changeType: "positive", // Menos cancelamentos é algo positivo!
+    description: "em relação ao mês passado"
   },
 ]
 
 export default function Dashboard() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-in fade-in duration-500">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight text-slate-900">Dashboard</h2>
-        <p className="text-slate-500">Visão geral do desempenho do seu SaaS imobiliário.</p>
+        <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Dashboard</h2>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Visão geral do desempenho e faturamento do ArkCoder.</p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <Card key={stat.name} className="border-slate-200 shadow-sm">
+          <Card key={stat.name} className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm transition-all hover:shadow-md">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-slate-500">
+              <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
                 {stat.name}
               </CardTitle>
-              <stat.icon className="h-4 w-4 text-slate-400" />
+              <div className="p-2 bg-slate-50 dark:bg-slate-800 rounded-md">
+                <stat.icon className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-slate-900">{stat.value}</div>
-              <p className="flex items-center text-xs mt-1">
+              <div className="text-2xl font-bold text-slate-900 dark:text-white">{stat.value}</div>
+              <p className="flex items-center text-xs mt-2">
                 {stat.changeType === "positive" ? (
-                  <ArrowUpRight className="mr-1 h-4 w-4 text-emerald-500" />
+                  <span className="flex items-center text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-1.5 py-0.5 rounded-md font-medium">
+                    <ArrowUpRight className="mr-1 h-3 w-3" />
+                    {stat.change}
+                  </span>
                 ) : (
-                  <ArrowDownRight className="mr-1 h-4 w-4 text-red-500" />
+                  <span className="flex items-center text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 px-1.5 py-0.5 rounded-md font-medium">
+                    <ArrowDownRight className="mr-1 h-3 w-3" />
+                    {stat.change}
+                  </span>
                 )}
-                <span
-                  className={
-                    stat.changeType === "positive" ? "text-emerald-500" : "text-red-500"
-                  }
-                >
-                  {stat.change}
-                </span>
-                <span className="ml-2 text-slate-500">em relação ao mês passado</span>
+                <span className="ml-2 text-slate-500 dark:text-slate-500">{stat.description}</span>
               </p>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-7">
-        <Card className="col-span-1 lg:col-span-4 border-slate-200 shadow-sm">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-7">
+        <Card className="col-span-1 lg:col-span-4 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold text-slate-900">Evolução da Receita (MRR)</CardTitle>
-            <CardDescription>
-              Receita recorrente mensal ao longo do ano.
+            <CardTitle className="text-lg font-semibold text-slate-900 dark:text-white">Evolução da Receita (MRR)</CardTitle>
+            <CardDescription className="text-slate-500 dark:text-slate-400">
+              Crescimento do faturamento recorrente ao longo do ano.
             </CardDescription>
           </CardHeader>
-          <CardContent className="pl-2">
-            <div className="h-[300px] w-full mt-4">
+          <CardContent className="pl-0">
+            <div className="h-[320px] w-full mt-4">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={revenueData}
-                  margin={{
-                    top: 5,
-                    right: 10,
-                    left: 10,
-                    bottom: 0,
-                  }}
+                  margin={{ top: 5, right: 20, left: 20, bottom: 0 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#334155" opacity={0.2} />
                   <XAxis 
                     dataKey="name" 
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#94a3b8', fontSize: 12 }}
+                    tick={{ fill: '#64748b', fontSize: 12 }}
                     dy={10}
                   />
                   <YAxis 
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#94a3b8', fontSize: 12 }}
-                    tickFormatter={(value) => `€${value}`}
+                    tick={{ fill: '#64748b', fontSize: 12 }}
+                    tickFormatter={(value) => `R$ ${value / 1000}k`}
                   />
                   <Tooltip 
-                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                    contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#f8fafc', borderRadius: '8px' }}
+                    itemStyle={{ color: '#818cf8' }}
+                    formatter={(value: number) => [`R$ ${value.toLocaleString('pt-BR')}`, 'Receita']}
                   />
                   <Line 
                     type="monotone" 
@@ -158,47 +163,44 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="col-span-1 lg:col-span-3 border-slate-200 shadow-sm">
+        <Card className="col-span-1 lg:col-span-3 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold text-slate-900">Adesões por Plano</CardTitle>
-            <CardDescription>
-              Distribuição de clientes ativos por tipo de plano.
+            <CardTitle className="text-lg font-semibold text-slate-900 dark:text-white">Adesões por Plano</CardTitle>
+            <CardDescription className="text-slate-500 dark:text-slate-400">
+              Distribuição de clientes ativos nos seus 6 planos.
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="h-[300px] w-full mt-4">
+          <CardContent className="pl-0">
+            <div className="h-[320px] w-full mt-4">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={planData}
-                  margin={{
-                    top: 5,
-                    right: 10,
-                    left: 10,
-                    bottom: 0,
-                  }}
+                  margin={{ top: 5, right: 20, left: 0, bottom: 0 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#334155" opacity={0.2} />
                   <XAxis 
                     dataKey="name" 
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#94a3b8', fontSize: 12 }}
+                    tick={{ fill: '#64748b', fontSize: 12 }}
                     dy={10}
                   />
                   <YAxis 
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#94a3b8', fontSize: 12 }}
+                    tick={{ fill: '#64748b', fontSize: 12 }}
                   />
                   <Tooltip 
-                    cursor={{ fill: '#f8f9fa' }}
-                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                    cursor={{ fill: '#334155', opacity: 0.1 }}
+                    contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#f8fafc', borderRadius: '8px' }}
+                    itemStyle={{ color: '#818cf8' }}
+                    formatter={(value: number) => [value, 'Clientes']}
                   />
                   <Bar 
                     dataKey="users" 
                     fill="#818cf8" 
                     radius={[4, 4, 0, 0]} 
-                    barSize={40}
+                    barSize={32}
                   />
                 </BarChart>
               </ResponsiveContainer>
