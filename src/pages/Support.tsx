@@ -1,15 +1,14 @@
-import React, { useState } from "react"
-import { 
-  Search, 
-  Filter, 
-  Clock, 
-  CheckCircle2, 
-  AlertCircle, 
-  MessageSquare, 
-  Send, 
+import React, { useEffect, useMemo, useRef, useState } from "react"
+import {
+  Search,
+  Filter,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  MessageSquare,
+  Send,
   MoreVertical,
-  Paperclip,
-  User
+  Paperclip
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -17,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
+import { supabase } from "../lib/supabase"
 
 type Priority = "Alta" | "Média" | "Baixa"
 type Status = "Aberto" | "Pendente" | "Resolvido"
@@ -26,6 +26,7 @@ interface Message {
   sender: "client" | "admin"
   text: string
   timestamp: string
+  createdAt: string
 }
 
 interface Ticket {
@@ -36,76 +37,8 @@ interface Ticket {
   status: Status
   timeElapsed: string
   messages: Message[]
+  createdAt: string
 }
-
-const initialTickets: Ticket[] = [
-  {
-    id: "TKT-1042",
-    clientName: "Imobiliária Central",
-    subject: "Dúvida no cadastro de imóveis",
-    priority: "Alta",
-    status: "Aberto",
-    timeElapsed: "há 2 horas",
-    messages: [
-      {
-        id: "m1",
-        sender: "client",
-        text: "Olá, estou a tentar adicionar um novo imóvel mas o campo de 'Área Útil' não está a guardar o valor que insiro. Podem ajudar?",
-        timestamp: "10:30"
-      },
-      {
-        id: "m2",
-        sender: "admin",
-        text: "Olá! Obrigado por nos contactar. Já identificámos o problema e a nossa equipa técnica está a trabalhar numa correção. Deve estar resolvido na próxima hora.",
-        timestamp: "10:45"
-      }
-    ]
-  },
-  {
-    id: "TKT-1041",
-    clientName: "Elite Imóveis",
-    subject: "Como configurar a IA Aura?",
-    priority: "Média",
-    status: "Pendente",
-    timeElapsed: "há 5 horas",
-    messages: [
-      {
-        id: "m1",
-        sender: "client",
-        text: "Bom dia, ativámos o plano Premium mas não sabemos onde configurar as respostas automáticas da IA Aura para o WhatsApp.",
-        timestamp: "08:15"
-      }
-    ]
-  },
-  {
-    id: "TKT-1038",
-    clientName: "Casa Nostra",
-    subject: "Fatura não recebida",
-    priority: "Baixa",
-    status: "Resolvido",
-    timeElapsed: "há 2 dias",
-    messages: [
-      {
-        id: "m1",
-        sender: "client",
-        text: "A fatura referente ao mês de Janeiro ainda não chegou ao nosso email financeiro.",
-        timestamp: "14:20"
-      },
-      {
-        id: "m2",
-        sender: "admin",
-        text: "Pedimos desculpa pelo atraso. A fatura foi reenviada agora mesmo para o email registado. Por favor, verifique também a pasta de spam.",
-        timestamp: "15:00"
-      },
-      {
-        id: "m3",
-        sender: "client",
-        text: "Recebido, muito obrigado!",
-        timestamp: "15:30"
-      }
-    ]
-  }
-]
 
 const PriorityBadge = ({ priority }: { priority: Priority }) => {
   switch (priority) {
@@ -129,50 +62,143 @@ const StatusIcon = ({ status }: { status: Status }) => {
   }
 }
 
+const normalizePriority = (priority: string | null | undefined): Priority => {
+  if (priority === "Alta" || priority?.toLowerCase() === "high") return "Alta"
+  if (priority === "Média" || priority === "Media" || priority?.toLowerCase() === "medium") return "Média"
+  return "Baixa"
+}
+
+const normalizeStatus = (status: string | null | undefined): Status => {
+  if (status === "Aberto" || status?.toLowerCase() === "open") return "Aberto"
+  if (status === "Pendente" || status?.toLowerCase() === "pending") return "Pendente"
+  return "Resolvido"
+}
+
+const formatTimeElapsed = (createdAt: string) => {
+  const created = new Date(createdAt).getTime()
+  const now = Date.now()
+  const diffMs = Math.max(0, now - created)
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
+
+  if (diffHours < 1) {
+    const diffMinutes = Math.max(1, Math.floor(diffMs / (1000 * 60)))
+    return `há ${diffMinutes} min`
+  }
+
+  if (diffHours < 24) {
+    return `há ${diffHours} hora${diffHours > 1 ? "s" : ""}`
+  }
+
+  const diffDays = Math.floor(diffHours / 24)
+  return `há ${diffDays} dia${diffDays > 1 ? "s" : ""}`
+}
+
+const formatMessageTimestamp = (createdAt: string) => {
+  const date = new Date(createdAt)
+  return date.toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit" })
+}
+
 export default function Support() {
-  const [tickets, setTickets] = useState<Ticket[]>(initialTickets)
-  const [selectedTicketId, setSelectedTicketId] = useState<string>(initialTickets[0].id)
+  const [tickets, setTickets] = useState<Ticket[]>([])
+  const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("Todos")
   const [replyText, setReplyText] = useState("")
+  const messagesContainerRef = useRef<HTMLDivElement>(null)
 
-  const selectedTicket = tickets.find(t => t.id === selectedTicketId)
+  const fetchTickets = async () => {
+    setIsLoading(true)
+    const { data, error } = await supabase
+      .from("saas_tickets")
+      .select("*, companies(name), saas_ticket_messages(*)")
+      .order("created_at", { ascending: false })
 
-  const filteredTickets = tickets.filter(ticket => {
-    const matchesSearch = ticket.clientName.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          ticket.subject.toLowerCase().includes(searchTerm.toLowerCase())
+    if (!error && data) {
+      const mappedTickets: Ticket[] = data.map((ticket: any) => {
+        const orderedMessages = [...(ticket.saas_ticket_messages ?? [])].sort(
+          (a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        )
+
+        return {
+          id: ticket.id,
+          clientName: ticket.companies?.name ?? "Imobiliária",
+          subject: ticket.subject ?? "Sem assunto",
+          priority: normalizePriority(ticket.priority),
+          status: normalizeStatus(ticket.status),
+          timeElapsed: formatTimeElapsed(ticket.created_at),
+          createdAt: ticket.created_at,
+          messages: orderedMessages.map((message: any) => ({
+            id: message.id,
+            sender: message.sender_type === "admin" ? "admin" : "client",
+            text: message.message ?? "",
+            timestamp: formatMessageTimestamp(message.created_at),
+            createdAt: message.created_at
+          }))
+        }
+      })
+
+      setTickets(mappedTickets)
+      setSelectedTicketId((currentSelected) => {
+        if (currentSelected && mappedTickets.some((ticket) => ticket.id === currentSelected)) {
+          return currentSelected
+        }
+        return mappedTickets[0]?.id ?? null
+      })
+    }
+
+    setIsLoading(false)
+  }
+
+  useEffect(() => {
+    fetchTickets()
+  }, [])
+
+  const selectedTicket = useMemo(
+    () => tickets.find((ticket) => ticket.id === selectedTicketId),
+    [tickets, selectedTicketId]
+  )
+
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
+    }
+  }, [selectedTicketId, selectedTicket?.messages.length])
+
+  const filteredTickets = tickets.filter((ticket) => {
+    const matchesSearch = ticket.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ticket.subject.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesStatus = statusFilter === "Todos" || ticket.status === statusFilter
-    
+
     return matchesSearch && matchesStatus
   })
 
-  const handleSendReply = () => {
-    if (!replyText.trim() || !selectedTicket) return
+  const handleSendReply = async () => {
+    if (!replyText.trim() || !selectedTicketId) return
 
-    const newMessage: Message = {
-      id: `m${Date.now()}`,
-      sender: "admin",
-      text: replyText,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    const { error } = await supabase.from("saas_ticket_messages").insert({
+      ticket_id: selectedTicketId,
+      sender_type: "admin",
+      message: replyText.trim()
+    })
+
+    if (!error) {
+      setReplyText("")
+      await fetchTickets()
     }
-
-    setTickets(tickets.map(t => {
-      if (t.id === selectedTicket.id) {
-        return { ...t, messages: [...t.messages, newMessage] }
-      }
-      return t
-    }))
-    setReplyText("")
   }
 
-  const handleResolveTicket = () => {
-    if (!selectedTicket) return
-    setTickets(tickets.map(t => {
-      if (t.id === selectedTicket.id) {
-        return { ...t, status: "Resolvido" as Status }
-      }
-      return t
-    }))
+  const handleResolveTicket = async () => {
+    if (!selectedTicketId) return
+
+    const { error } = await supabase
+      .from("saas_tickets")
+      .update({ status: "Resolvido" })
+      .eq("id", selectedTicketId)
+
+    if (!error) {
+      await fetchTickets()
+    }
   }
 
   return (
@@ -183,22 +209,22 @@ export default function Support() {
       </div>
 
       <div className="flex-1 flex overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm">
-        
+
         {/* Left Column: Ticket List */}
         <div className="w-full md:w-80 lg:w-96 flex flex-col border-r border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950">
           {/* List Header & Filters */}
           <div className="p-4 border-b border-slate-200 dark:border-slate-700 space-y-3 bg-white dark:bg-slate-900">
             <div className="relative">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
-              <Input 
-                placeholder="Procurar tickets..." 
+              <Input
+                placeholder="Procurar tickets..."
                 className="pl-9 bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-700 h-9 text-sm dark:text-white"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <div className="relative">
-              <select 
+              <select
                 className="w-full h-9 pl-3 pr-8 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-700 dark:text-slate-200 appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
@@ -214,7 +240,12 @@ export default function Support() {
 
           {/* Ticket Items */}
           <div className="flex-1 overflow-y-auto">
-            {filteredTickets.length > 0 ? (
+            {isLoading ? (
+              <div className="p-8 text-center text-slate-500 dark:text-slate-400 flex flex-col items-center">
+                <MessageSquare className="h-8 w-8 mb-2 opacity-20" />
+                <p className="text-sm">Carregando tickets...</p>
+              </div>
+            ) : filteredTickets.length > 0 ? (
               <div className="divide-y divide-slate-100 dark:divide-slate-800/50">
                 {filteredTickets.map((ticket) => (
                   <button
@@ -222,8 +253,8 @@ export default function Support() {
                     onClick={() => setSelectedTicketId(ticket.id)}
                     className={cn(
                       "w-full text-left p-4 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-800/80",
-                      selectedTicketId === ticket.id 
-                        ? "bg-indigo-50/50 dark:bg-indigo-500/10 border-l-2 border-l-indigo-500" 
+                      selectedTicketId === ticket.id
+                        ? "bg-indigo-50/50 dark:bg-indigo-500/10 border-l-2 border-l-indigo-500"
                         : "border-l-2 border-l-transparent"
                     )}
                   >
@@ -277,12 +308,12 @@ export default function Support() {
                   <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{selectedTicket.subject}</p>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-2 shrink-0 ml-4">
                 {selectedTicket.status !== "Resolvido" && (
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="hidden sm:flex h-8 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/20 hover:bg-emerald-100 dark:hover:bg-emerald-500/20"
                     onClick={handleResolveTicket}
                   >
@@ -297,8 +328,8 @@ export default function Support() {
             </div>
 
             {/* Chat Messages */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-50 dark:bg-slate-950">
-              {selectedTicket.messages.map((msg, idx) => {
+            <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-50 dark:bg-slate-950">
+              {selectedTicket.messages.map((msg) => {
                 const isAdmin = msg.sender === "admin"
                 return (
                   <div key={msg.id} className={cn("flex w-full", isAdmin ? "justify-end" : "justify-start")}>
@@ -315,7 +346,7 @@ export default function Support() {
                           </AvatarFallback>
                         )}
                       </Avatar>
-                      
+
                       <div className={cn("flex flex-col", isAdmin ? "items-end" : "items-start")}>
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-xs font-medium text-slate-700 dark:text-slate-200">
@@ -323,11 +354,11 @@ export default function Support() {
                           </span>
                           <span className="text-[10px] text-slate-400 dark:text-slate-500">{msg.timestamp}</span>
                         </div>
-                        <div 
+                        <div
                           className={cn(
                             "px-4 py-2.5 rounded-2xl text-sm shadow-sm",
-                            isAdmin 
-                              ? "bg-indigo-600 text-white rounded-tr-sm" 
+                            isAdmin
+                              ? "bg-indigo-600 text-white rounded-tr-sm"
                               : "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-100 dark:border-slate-800/50 rounded-tl-sm"
                           )}
                         >
@@ -351,19 +382,19 @@ export default function Support() {
                   <Button variant="ghost" size="icon" className="shrink-0 h-10 w-10 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-300 dark:hover:text-slate-300">
                     <Paperclip className="h-5 w-5" />
                   </Button>
-                  <Textarea 
-                    placeholder="Escreva a sua resposta..." 
+                  <Textarea
+                    placeholder="Escreva a sua resposta..."
                     className="min-h-[40px] max-h-32 resize-none bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white py-3"
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
+                      if (e.key === "Enter" && !e.shiftKey) {
                         e.preventDefault()
                         handleSendReply()
                       }
                     }}
                   />
-                  <Button 
+                  <Button
                     className="shrink-0 h-10 w-10 p-0 bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 rounded-full"
                     onClick={handleSendReply}
                     disabled={!replyText.trim()}
