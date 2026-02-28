@@ -58,7 +58,7 @@ export default function Login() {
             <Building2 className="h-8 w-8" />
           </div>
           <h1 className="text-2xl font-bold text-white tracking-tight">ArkCoder Admin</h1>
-          <p className="text-slate-400 text-sm mt-1">Acesso restrito ao Super Administrador</p>
+          <p className="text-slate-400 dark:text-slate-500 text-sm mt-1">Acesso restrito ao Super Administrador</p>
         </div>
 
         {errorMsg && (
@@ -71,7 +71,7 @@ export default function Login() {
           <div className="space-y-2">
             <label className="text-sm font-medium text-slate-300 ml-1">E-mail</label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500 dark:text-slate-400" />
               <Input
                 type="email"
                 placeholder="admin@arkcoder.com"
@@ -88,7 +88,7 @@ export default function Login() {
               <label className="text-sm font-medium text-slate-300">Palavra-passe</label>
             </div>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500" />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500 dark:text-slate-400" />
               <Input
                 type="password"
                 placeholder="••••••••"

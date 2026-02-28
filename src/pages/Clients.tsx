@@ -128,12 +128,12 @@ export default function Clients() {
     <div className="space-y-6 relative">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900">Clientes</h2>
-          <p className="text-sm text-slate-500 mt-1">Faça a gestão das imobiliárias que utilizam a plataforma.</p>
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">Clientes</h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Faça a gestão das imobiliárias que utilizam a plataforma.</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="bg-white border-slate-200 text-slate-700 h-9">
-            <Download className="mr-2 h-4 w-4 text-slate-400" />
+          <Button variant="outline" className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 h-9">
+            <Download className="mr-2 h-4 w-4 text-slate-400 dark:text-slate-500" />
             Exportar
           </Button>
           <Button onClick={() => setIsNewClientModalOpen(true)} className="bg-brand-600 hover:bg-brand-700">
@@ -143,55 +143,55 @@ export default function Clients() {
         </div>
       </div>
 
-      <Card className="border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-slate-100 flex flex-col sm:flex-row gap-4 items-center justify-between bg-white">
+      <Card className="border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div className="p-4 border-b border-slate-100 dark:border-slate-800/50 flex flex-col sm:flex-row gap-4 items-center justify-between bg-white dark:bg-slate-900">
           <div className="flex items-center gap-3 w-full sm:w-auto">
-            <Button variant="outline" className="bg-white border-slate-200 text-slate-700 font-medium h-9">
+            <Button variant="outline" className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium h-9">
               Status: Todos
-              <ChevronDown className="ml-2 h-4 w-4 text-slate-400" />
+              <ChevronDown className="ml-2 h-4 w-4 text-slate-400 dark:text-slate-500" />
             </Button>
-            <Button variant="outline" className="bg-white border-slate-200 text-slate-700 font-medium h-9">
+            <Button variant="outline" className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium h-9">
               Plano: Todos
-              <ChevronDown className="ml-2 h-4 w-4 text-slate-400" />
+              <ChevronDown className="ml-2 h-4 w-4 text-slate-400 dark:text-slate-500" />
             </Button>
           </div>
 
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <div className="relative w-full sm:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
               <Input
                 placeholder="Pesquisar clientes..."
-                className="pl-9 bg-slate-50 border-slate-200 h-9 text-sm"
+                className="pl-9 bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-700 h-9 text-sm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <Button variant="outline" className="bg-white border-slate-200 text-slate-700 h-9 px-3">
-              <Filter className="mr-2 h-4 w-4 text-slate-400" />
+            <Button variant="outline" className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 h-9 px-3">
+              <Filter className="mr-2 h-4 w-4 text-slate-400 dark:text-slate-500" />
               Filtros
             </Button>
           </div>
         </div>
         <Table>
           <TableHeader>
-            <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-slate-100">
-              <TableHead className="font-medium text-slate-500 text-xs uppercase tracking-wider">Imobiliária</TableHead>
-              <TableHead className="font-medium text-slate-500 text-xs uppercase tracking-wider">Plano</TableHead>
-              <TableHead className="font-medium text-slate-500 text-xs uppercase tracking-wider">Estado</TableHead>
-              <TableHead className="font-medium text-slate-500 text-xs uppercase tracking-wider">Data de Adesão</TableHead>
+            <TableRow className="bg-slate-50 dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-slate-100 dark:border-slate-800/50">
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">Imobiliária</TableHead>
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">Plano</TableHead>
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">Estado</TableHead>
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">Data de Adesão</TableHead>
               <TableHead className="w-12"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-10 text-slate-500">
+                <TableCell colSpan={6} className="text-center py-10 text-slate-500 dark:text-slate-400">
                   Carregando empresas...
                 </TableCell>
               </TableRow>
             ) : filteredClients.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-10 text-slate-500">
+                <TableCell colSpan={6} className="text-center py-10 text-slate-500 dark:text-slate-400">
                   Nenhuma empresa cadastrada.
                 </TableCell>
               </TableRow>
@@ -199,24 +199,24 @@ export default function Clients() {
               filteredClients.map((client) => (
                 <TableRow
                   key={client.id}
-                  className="cursor-pointer hover:bg-slate-50 transition-colors"
+                  className="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
                   onClick={() => setSelectedClient(client)}
                 >
                   <TableCell>
                     <div className="flex items-center gap-3">
-                      <Avatar className="h-9 w-9 border border-slate-200">
-                        <AvatarFallback className="bg-slate-100 text-slate-600 font-medium">
+                      <Avatar className="h-9 w-9 border border-slate-200 dark:border-slate-700">
+                        <AvatarFallback className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium">
                           {client.name?.substring(0, 2).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="font-medium text-slate-900">{client.name}</p>
-                        <p className="text-xs text-slate-500">{client.slug}.seusaas.com</p>
+                        <p className="font-medium text-slate-900 dark:text-slate-50">{client.name}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{client.slug}.seusaas.com</p>
                       </div>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="secondary" className="bg-slate-100 text-slate-700 hover:bg-slate-200">
+                    <Badge variant="secondary" className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200">
                       {client.plan}
                     </Badge>
                   </TableCell>
@@ -225,11 +225,11 @@ export default function Clients() {
                       {client.active ? "Ativo" : "Inativo"}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-slate-500">
+                  <TableCell className="text-slate-500 dark:text-slate-400">
                     {new Date(client.created_at).toLocaleDateString("pt-BR")}
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button variant="ghost" size="icon" className="text-slate-400 hover:text-slate-600" onClick={(e) => e.stopPropagation()}>
+                    <Button variant="ghost" size="icon" className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-300" onClick={(e) => e.stopPropagation()}>
                       <MoreHorizontal className="h-4 w-4" />
                     </Button>
                   </TableCell>
@@ -239,15 +239,15 @@ export default function Clients() {
           </TableBody>
         </Table>
 
-        <div className="flex items-center justify-between p-4 border-t border-slate-100 bg-white">
-          <p className="text-sm text-slate-500">
-            Mostrando <span className="font-medium text-slate-900">{loading ? 0 : filteredClients.length === 0 ? 0 : 1}</span> a <span className="font-medium text-slate-900">{filteredClients.length}</span> de <span className="font-medium text-slate-900">{clients.length}</span> resultados
+        <div className="flex items-center justify-between p-4 border-t border-slate-100 dark:border-slate-800/50 bg-white dark:bg-slate-900">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Mostrando <span className="font-medium text-slate-900 dark:text-slate-50">{loading ? 0 : filteredClients.length === 0 ? 0 : 1}</span> a <span className="font-medium text-slate-900 dark:text-slate-50">{filteredClients.length}</span> de <span className="font-medium text-slate-900 dark:text-slate-50">{clients.length}</span> resultados
           </p>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" className="text-slate-500 font-medium h-8 bg-white border-slate-200">
+            <Button variant="outline" size="sm" className="text-slate-500 dark:text-slate-400 font-medium h-8 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
               Anterior
             </Button>
-            <Button variant="outline" size="sm" className="text-slate-900 font-medium h-8 bg-white border-slate-200">
+            <Button variant="outline" size="sm" className="text-slate-900 dark:text-slate-50 font-medium h-8 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
               Próxima
             </Button>
           </div>
@@ -264,42 +264,42 @@ export default function Clients() {
           />
           
           {/* Painel da Sidebar Fixado na Direita */}
-          <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-96 bg-white border-l border-slate-200 shadow-2xl flex flex-col overflow-y-auto animate-in slide-in-from-right-8 duration-300">
-            <div className="p-6 border-b border-slate-100 flex justify-between items-start sticky top-0 bg-white/90 backdrop-blur-md z-10">
+          <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-96 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-700 shadow-2xl flex flex-col overflow-y-auto animate-in slide-in-from-right-8 duration-300">
+            <div className="p-6 border-b border-slate-100 dark:border-slate-800/50 flex justify-between items-start sticky top-0 bg-white dark:bg-slate-900 backdrop-blur-md z-10">
               <div>
-                <h2 className="text-xl font-bold text-slate-800">{selectedClient.name}</h2>
+                <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">{selectedClient.name}</h2>
                 <div className="flex items-center gap-2 mt-2">
-                  <Badge variant="secondary" className="bg-slate-100 text-slate-700 uppercase text-[10px] tracking-wider">{selectedClient.plan}</Badge>
+                  <Badge variant="secondary" className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 uppercase text-[10px] tracking-wider">{selectedClient.plan}</Badge>
                   <Badge className={selectedClient.active ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-red-50 text-red-700 border-red-200"}>
                     {selectedClient.active ? "Ativo" : "Suspenso"}
                   </Badge>
                 </div>
               </div>
-              <Button variant="ghost" size="icon" onClick={() => setSelectedClient(null)} className="text-slate-400 hover:text-slate-600 rounded-full">
+              <Button variant="ghost" size="icon" onClick={() => setSelectedClient(null)} className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-300 rounded-full">
                 <X className="h-5 w-5" />
               </Button>
             </div>
 
             <div className="p-6 flex-1 flex flex-col gap-6">
               {/* Informações Essenciais */}
-              <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100">
-                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <div className="bg-slate-50 dark:bg-slate-950 p-5 rounded-2xl border border-slate-100 dark:border-slate-800/50">
+                <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
                   <Building2 className="h-4 w-4" />
                   Dados da Imobiliária
                 </h3>
 
                 <div className="space-y-4">
                   <div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Subdomínio (Acesso)</p>
+                    <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Subdomínio (Acesso)</p>
                     <a href={`https://${selectedClient.slug}.seusaas.com`} target="_blank" rel="noreferrer" className="text-sm font-semibold text-brand-600 hover:underline flex items-center gap-1">
                       {selectedClient.slug}.seusaas.com
                     </a>
                   </div>
 
                   <div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Cliente Desde</p>
-                    <p className="text-sm font-medium text-slate-800 flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-slate-400" />
+                    <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Cliente Desde</p>
+                    <p className="text-sm font-medium text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                      <Calendar className="h-4 w-4 text-slate-400 dark:text-slate-500" />
                       {new Date(selectedClient.created_at).toLocaleDateString("pt-BR")}
                     </p>
                   </div>
@@ -338,14 +338,14 @@ export default function Clients() {
       {/* Modal Nova Empresa */}
       {isNewClientModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
-              <h3 className="text-lg font-bold text-slate-800">Adicionar Nova Empresa</h3>
-              <button onClick={() => setIsNewClientModalOpen(false)} className="text-slate-400 hover:text-slate-600"><X size={20} /></button>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800/50 flex justify-between items-center">
+              <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">Adicionar Nova Empresa</h3>
+              <button onClick={() => setIsNewClientModalOpen(false)} className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-300"><X size={20} /></button>
             </div>
             <form onSubmit={handleCreateCompany} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Nome da Imobiliária</label>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1">Nome da Imobiliária</label>
                 <Input
                   placeholder="Ex: TR Imóveis"
                   value={newCompany.name}
@@ -353,15 +353,15 @@ export default function Clients() {
                   required
                 />
                 {newCompany.name && (
-                  <p className="text-xs text-slate-500 mt-2">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
                     Subdomínio gerado: <strong className="text-brand-600">{newCompany.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")}</strong>.seusaas.com
                   </p>
                 )}
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Plano Inicial</label>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1">Plano Inicial</label>
                 <select
-                  className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex h-10 w-full rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 dark:placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   value={newCompany.plan}
                   onChange={(e) => setNewCompany({ ...newCompany, plan: e.target.value })}
                 >
