@@ -145,7 +145,7 @@ export default function Payments() {
       </div>
 
       {/* Chart Section */}
-      <Card className="border-slate-200 dark:border-slate-700 shadow-sm">
+      <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <div>
             <CardTitle className="text-lg font-semibold text-slate-900 dark:text-slate-50">Total Invoice Analytics</CardTitle>
@@ -172,7 +172,7 @@ export default function Payments() {
             </Button>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="bg-white dark:bg-slate-900">
           <div className="h-[300px] w-full mt-4">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
@@ -230,7 +230,7 @@ export default function Payments() {
       </Card>
 
       {/* Table Section */}
-      <Card className="border-slate-200 dark:border-slate-700 shadow-sm">
+      <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm">
         <div className="p-4 border-b border-slate-100 dark:border-slate-800/50 flex flex-col sm:flex-row gap-4 items-center justify-between bg-white dark:bg-slate-900 rounded-t-xl">
           <Button variant="outline" className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium h-9">
             Status: All Invoice
@@ -242,7 +242,7 @@ export default function Payments() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
               <Input 
                 placeholder="Search" 
-                className="pl-9 bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-700 h-9"
+                className="pl-9 bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 h-9 dark:text-white"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -254,24 +254,24 @@ export default function Payments() {
           </div>
         </div>
         
-        <Table>
+        <Table className="border-t border-slate-100 dark:border-slate-800">
           <TableHeader>
-            <TableRow className="bg-slate-50 dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-slate-100 dark:border-slate-800/50">
+            <TableRow className="bg-slate-50 dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-slate-100 dark:border-slate-800">
               <TableHead className="w-12 pl-4">
                 <input type="checkbox" className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-600" />
               </TableHead>
-              <TableHead className="font-medium text-slate-500 dark:text-slate-400">Industry</TableHead>
-              <TableHead className="font-medium text-slate-500 dark:text-slate-400">Id</TableHead>
-              <TableHead className="font-medium text-slate-500 dark:text-slate-400">Status</TableHead>
-              <TableHead className="font-medium text-slate-500 dark:text-slate-400">Product/Id</TableHead>
-              <TableHead className="font-medium text-slate-500 dark:text-slate-400">Grand Total</TableHead>
-              <TableHead className="font-medium text-slate-500 dark:text-slate-400">Comment</TableHead>
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">Industry</TableHead>
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">Id</TableHead>
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">Status</TableHead>
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">Product/Id</TableHead>
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">Grand Total</TableHead>
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">Comment</TableHead>
               <TableHead className="w-12"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {invoices.map((invoice, i) => (
-              <TableRow key={i} className="border-slate-100 dark:border-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <TableRow key={i} className="border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50">
                 <TableCell className="pl-4">
                   <input type="checkbox" className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-600" />
                 </TableCell>
