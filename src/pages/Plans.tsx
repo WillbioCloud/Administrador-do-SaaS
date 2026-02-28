@@ -148,7 +148,7 @@ export default function Plans() {
       {/* Cabeçalho da Página */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Gestão de Planos</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">Gestão de Planos</h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Configure os preços, limites e funcionalidades do seu SaaS.</p>
         </div>
         <Button className="bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">
@@ -162,7 +162,7 @@ export default function Plans() {
           <Card 
             key={plan.id} 
             className={cn(
-              "relative flex flex-col bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 transition-all hover:shadow-lg dark:hover:shadow-indigo-500/10",
+              "relative flex flex-col bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 transition-all hover:shadow-lg dark:hover:shadow-indigo-500/10",
               plan.isPopular && "border-indigo-500/50 shadow-md shadow-indigo-500/10 dark:bg-slate-900/80"
             )}
           >
@@ -178,13 +178,13 @@ export default function Plans() {
               <div className="flex justify-between items-start">
                 <div className="flex items-center gap-2">
                   <span className="text-2xl">{plan.icon}</span>
-                  <CardTitle className="text-xl text-slate-900 dark:text-white">{plan.name}</CardTitle>
+                  <CardTitle className="text-xl text-slate-900 dark:text-slate-50">{plan.name}</CardTitle>
                 </div>
                 <div className="flex gap-1">
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400" onClick={() => handleEdit(plan)}>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400" onClick={() => handleEdit(plan)}>
                     <Edit2 className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-red-600 dark:hover:text-red-400">
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 dark:text-slate-500 hover:text-red-600 dark:hover:text-red-400">
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
@@ -192,7 +192,7 @@ export default function Plans() {
               <CardDescription className="text-sm text-slate-500 dark:text-slate-400 min-h-[40px] mt-2">
                 {plan.description}
               </CardDescription>
-              <div className="mt-4 flex items-baseline text-slate-900 dark:text-white">
+              <div className="mt-4 flex items-baseline text-slate-900 dark:text-slate-50">
                 <span className="text-3xl font-bold tracking-tight">R$ {plan.price.toFixed(2).replace('.', ',')}</span>
                 <span className="text-sm font-medium text-slate-500 dark:text-slate-400 ml-1">/mês</span>
               </div>
@@ -206,7 +206,7 @@ export default function Plans() {
                       <Check className="h-3 w-3 text-indigo-600 dark:text-indigo-400" />
                     </div>
                     <div className="text-sm">
-                      <span className="text-slate-700 dark:text-slate-300 font-medium">{feature.text}</span>
+                      <span className="text-slate-700 dark:text-slate-200 font-medium">{feature.text}</span>
                       {feature.highlight && (
                         <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{feature.highlight}</p>
                       )}
@@ -222,56 +222,56 @@ export default function Plans() {
       {/* Painel Lateral (Slide-over) de Edição Simulado */}
       {isEditing && editingPlan && (
         <div className="fixed inset-0 z-50 flex justify-end bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
-          <div className="w-full max-w-md bg-white dark:bg-slate-900 h-full border-l border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
+          <div className="w-full max-w-md bg-white dark:bg-slate-900 h-full border-l border-slate-200 dark:border-slate-700 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
             
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800">
-              <h3 className="font-semibold text-lg text-slate-900 dark:text-white flex items-center gap-2">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800/50">
+              <h3 className="font-semibold text-lg text-slate-900 dark:text-slate-50 flex items-center gap-2">
                 <Edit2 className="h-4 w-4 text-indigo-500" />
                 Editar Plano {editingPlan.name}
               </h3>
               <Button variant="ghost" size="icon" onClick={() => setIsEditing(false)}>
-                <X className="h-5 w-5 text-slate-500" />
+                <X className="h-5 w-5 text-slate-500 dark:text-slate-400" />
               </Button>
             </div>
 
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
               <div className="space-y-4">
                 <div className="grid gap-2">
-                  <Label className="text-slate-700 dark:text-slate-300">Nome do Plano</Label>
+                  <Label className="text-slate-700 dark:text-slate-200">Nome do Plano</Label>
                   <Input 
                     value={editingPlan.name} 
                     onChange={(e) => setEditingPlan({...editingPlan, name: e.target.value})}
-                    className="bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 dark:text-white" 
+                    className="bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white" 
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label className="text-slate-700 dark:text-slate-300">Preço Mensal (R$)</Label>
+                  <Label className="text-slate-700 dark:text-slate-200">Preço Mensal (R$)</Label>
                   <Input 
                     type="number"
                     value={editingPlan.price} 
                     onChange={(e) => setEditingPlan({...editingPlan, price: parseFloat(e.target.value)})}
-                    className="bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 dark:text-white" 
+                    className="bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white" 
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label className="text-slate-700 dark:text-slate-300">Descrição Comercial</Label>
+                  <Label className="text-slate-700 dark:text-slate-200">Descrição Comercial</Label>
                   <textarea 
                     value={editingPlan.description}
                     onChange={(e) => setEditingPlan({...editingPlan, description: e.target.value})}
-                    className="w-full min-h-[80px] rounded-md border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-sm text-slate-900 dark:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 resize-none"
+                    className="w-full min-h-[80px] rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 resize-none"
                   />
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
-                <h4 className="font-medium text-sm text-slate-900 dark:text-white mb-4">Funcionalidades do Plano</h4>
+              <div className="pt-4 border-t border-slate-100 dark:border-slate-800/50">
+                <h4 className="font-medium text-sm text-slate-900 dark:text-slate-50 mb-4">Funcionalidades do Plano</h4>
                 <div className="space-y-3">
                   {editingPlan.features.map((feature, idx) => (
                     <div key={idx} className="flex items-center gap-2">
                       <Input 
                         value={feature.text} 
                         readOnly
-                        className="bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 dark:text-slate-400" 
+                        className="bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-slate-400" 
                       />
                       <Button variant="ghost" size="icon" className="shrink-0 text-red-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">
                         <Trash2 className="h-4 w-4" />
@@ -285,7 +285,7 @@ export default function Plans() {
               </div>
             </div>
 
-            <div className="p-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3">
+            <div className="p-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-3">
               <Button variant="outline" onClick={() => setIsEditing(false)} className="border-slate-200 dark:border-slate-700">
                 Cancelar
               </Button>

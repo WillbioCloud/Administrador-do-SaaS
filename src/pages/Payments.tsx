@@ -130,9 +130,9 @@ export default function Payments() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h2 className="text-2xl font-bold tracking-tight text-slate-900">Pagamentos (Sales Invoice)</h2>
+        <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">Pagamentos (Sales Invoice)</h2>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="bg-white border-slate-200 text-slate-700">
+          <Button variant="outline" className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200">
             <Download className="mr-2 h-4 w-4" />
             Import/Export
             <ChevronDown className="ml-2 h-4 w-4" />
@@ -145,29 +145,29 @@ export default function Payments() {
       </div>
 
       {/* Chart Section */}
-      <Card className="border-slate-200 shadow-sm">
+      <Card className="border-slate-200 dark:border-slate-700 shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <div>
-            <CardTitle className="text-lg font-semibold text-slate-900">Total Invoice Analytics</CardTitle>
+            <CardTitle className="text-lg font-semibold text-slate-900 dark:text-slate-50">Total Invoice Analytics</CardTitle>
             <div className="flex items-center gap-4 mt-2 text-sm">
               <div className="flex items-center gap-1.5">
                 <div className="w-3 h-3 rounded-sm bg-pink-400" />
-                <span className="text-slate-500">Incoming Bills</span>
+                <span className="text-slate-500 dark:text-slate-400">Incoming Bills</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="w-3 h-3 rounded-sm bg-indigo-400" />
-                <span className="text-slate-500">Outgoing Bills</span>
+                <span className="text-slate-500 dark:text-slate-400">Outgoing Bills</span>
               </div>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" className="h-9 bg-white border-slate-200 text-slate-700">
-              <Clock className="mr-2 h-4 w-4 text-slate-400" />
+            <Button variant="outline" size="sm" className="h-9 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200">
+              <Clock className="mr-2 h-4 w-4 text-slate-400 dark:text-slate-500" />
               Monthly
               <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
-            <Button variant="outline" size="sm" className="h-9 bg-white border-slate-200 text-slate-700">
-              <Filter className="mr-2 h-4 w-4 text-slate-400" />
+            <Button variant="outline" size="sm" className="h-9 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200">
+              <Filter className="mr-2 h-4 w-4 text-slate-400 dark:text-slate-500" />
               Filters
             </Button>
           </div>
@@ -230,25 +230,25 @@ export default function Payments() {
       </Card>
 
       {/* Table Section */}
-      <Card className="border-slate-200 shadow-sm">
-        <div className="p-4 border-b border-slate-100 flex flex-col sm:flex-row gap-4 items-center justify-between bg-white rounded-t-xl">
-          <Button variant="outline" className="bg-white border-slate-200 text-slate-700 font-medium h-9">
+      <Card className="border-slate-200 dark:border-slate-700 shadow-sm">
+        <div className="p-4 border-b border-slate-100 dark:border-slate-800/50 flex flex-col sm:flex-row gap-4 items-center justify-between bg-white dark:bg-slate-900 rounded-t-xl">
+          <Button variant="outline" className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium h-9">
             Status: All Invoice
-            <ChevronDown className="ml-2 h-4 w-4 text-slate-400" />
+            <ChevronDown className="ml-2 h-4 w-4 text-slate-400 dark:text-slate-500" />
           </Button>
           
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <div className="relative w-full sm:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
               <Input 
                 placeholder="Search" 
-                className="pl-9 bg-slate-50 border-slate-200 h-9"
+                className="pl-9 bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-700 h-9"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <Button variant="outline" className="bg-white border-slate-200 text-slate-700 h-9 px-3">
-              <Filter className="mr-2 h-4 w-4 text-slate-400" />
+            <Button variant="outline" className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 h-9 px-3">
+              <Filter className="mr-2 h-4 w-4 text-slate-400 dark:text-slate-500" />
               Filters
             </Button>
           </div>
@@ -256,39 +256,39 @@ export default function Payments() {
         
         <Table>
           <TableHeader>
-            <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-slate-100">
+            <TableRow className="bg-slate-50 dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-slate-100 dark:border-slate-800/50">
               <TableHead className="w-12 pl-4">
                 <input type="checkbox" className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-600" />
               </TableHead>
-              <TableHead className="font-medium text-slate-500">Industry</TableHead>
-              <TableHead className="font-medium text-slate-500">Id</TableHead>
-              <TableHead className="font-medium text-slate-500">Status</TableHead>
-              <TableHead className="font-medium text-slate-500">Product/Id</TableHead>
-              <TableHead className="font-medium text-slate-500">Grand Total</TableHead>
-              <TableHead className="font-medium text-slate-500">Comment</TableHead>
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400">Industry</TableHead>
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400">Id</TableHead>
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400">Status</TableHead>
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400">Product/Id</TableHead>
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400">Grand Total</TableHead>
+              <TableHead className="font-medium text-slate-500 dark:text-slate-400">Comment</TableHead>
               <TableHead className="w-12"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {invoices.map((invoice, i) => (
-              <TableRow key={i} className="border-slate-100 hover:bg-slate-50/50">
+              <TableRow key={i} className="border-slate-100 dark:border-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800/50">
                 <TableCell className="pl-4">
                   <input type="checkbox" className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-600" />
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    <Avatar className="h-9 w-9 border border-slate-200">
-                      <AvatarFallback className="bg-slate-50 text-slate-600 text-xs font-medium">
+                    <Avatar className="h-9 w-9 border border-slate-200 dark:border-slate-700">
+                      <AvatarFallback className="bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-300 text-xs font-medium">
                         {invoice.initials}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
-                      <span className="text-sm font-medium text-slate-900">{invoice.client}</span>
-                      <span className="text-xs text-slate-500">{invoice.email}</span>
+                      <span className="text-sm font-medium text-slate-900 dark:text-slate-50">{invoice.client}</span>
+                      <span className="text-xs text-slate-500 dark:text-slate-400">{invoice.email}</span>
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="text-sm font-medium text-slate-900">{invoice.id}</TableCell>
+                <TableCell className="text-sm font-medium text-slate-900 dark:text-slate-50">{invoice.id}</TableCell>
                 <TableCell>
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${
                     invoice.status === 'Paid' 
@@ -298,10 +298,10 @@ export default function Payments() {
                     {invoice.status}
                   </span>
                 </TableCell>
-                <TableCell className="text-sm text-slate-500">{invoice.product}</TableCell>
-                <TableCell className="text-sm font-semibold text-slate-900">{invoice.total}</TableCell>
+                <TableCell className="text-sm text-slate-500 dark:text-slate-400">{invoice.product}</TableCell>
+                <TableCell className="text-sm font-semibold text-slate-900 dark:text-slate-50">{invoice.total}</TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-3 text-slate-400">
+                  <div className="flex items-center gap-3 text-slate-400 dark:text-slate-500">
                     <span className="text-xs">{invoice.timeAgo}</span>
                     <div className="flex items-center gap-1">
                       <MessageSquare className="h-3.5 w-3.5" />
@@ -311,7 +311,7 @@ export default function Payments() {
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-slate-600">
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-300">
                     <MoreHorizontal className="h-4 w-4" />
                   </Button>
                 </TableCell>
@@ -321,18 +321,18 @@ export default function Payments() {
         </Table>
         
         {/* Pagination */}
-        <div className="flex items-center justify-end gap-2 p-4 border-t border-slate-100 bg-white rounded-b-xl">
-          <Button variant="ghost" size="sm" className="text-slate-500 font-medium">
+        <div className="flex items-center justify-end gap-2 p-4 border-t border-slate-100 dark:border-slate-800/50 bg-white dark:bg-slate-900 rounded-b-xl">
+          <Button variant="ghost" size="sm" className="text-slate-500 dark:text-slate-400 font-medium">
             <ChevronDown className="h-4 w-4 mr-1 rotate-90" />
             Previous
           </Button>
           <div className="flex items-center gap-1">
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-slate-500">1</Button>
-            <Button variant="outline" size="sm" className="h-8 w-8 p-0 border-slate-200 bg-white text-slate-900 font-medium">2</Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-slate-500">3</Button>
-            <span className="text-slate-400 px-1">...</span>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-slate-500 dark:text-slate-400">1</Button>
+            <Button variant="outline" size="sm" className="h-8 w-8 p-0 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 font-medium">2</Button>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-slate-500 dark:text-slate-400">3</Button>
+            <span className="text-slate-400 dark:text-slate-500 px-1">...</span>
           </div>
-          <Button variant="ghost" size="sm" className="text-slate-900 font-medium">
+          <Button variant="ghost" size="sm" className="text-slate-900 dark:text-slate-50 font-medium">
             Next
             <ChevronDown className="h-4 w-4 ml-1 -rotate-90" />
           </Button>

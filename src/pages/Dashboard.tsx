@@ -79,23 +79,23 @@ export default function Dashboard() {
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Dashboard</h2>
+        <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">Dashboard</h2>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Visão geral do desempenho e faturamento do ArkCoder.</p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <Card key={stat.name} className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm transition-all hover:shadow-md">
+          <Card key={stat.name} className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm transition-all hover:shadow-md">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
                 {stat.name}
               </CardTitle>
-              <div className="p-2 bg-slate-50 dark:bg-slate-800 rounded-md">
+              <div className="p-2 bg-slate-50 dark:bg-slate-950 rounded-md">
                 <stat.icon className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white">{stat.value}</div>
+              <div className="text-2xl font-bold text-slate-900 dark:text-slate-50">{stat.value}</div>
               <p className="flex items-center text-xs mt-2">
                 {stat.changeType === "positive" ? (
                   <span className="flex items-center text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-1.5 py-0.5 rounded-md font-medium">
@@ -108,7 +108,7 @@ export default function Dashboard() {
                     {stat.change}
                   </span>
                 )}
-                <span className="ml-2 text-slate-500 dark:text-slate-500">{stat.description}</span>
+                <span className="ml-2 text-slate-500 dark:text-slate-400">{stat.description}</span>
               </p>
             </CardContent>
           </Card>
@@ -116,9 +116,9 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-7">
-        <Card className="col-span-1 lg:col-span-4 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm">
+        <Card className="col-span-1 lg:col-span-4 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold text-slate-900 dark:text-white">Evolução da Receita (MRR)</CardTitle>
+            <CardTitle className="text-lg font-semibold text-slate-900 dark:text-slate-50">Evolução da Receita (MRR)</CardTitle>
             <CardDescription className="text-slate-500 dark:text-slate-400">
               Crescimento do faturamento recorrente ao longo do ano.
             </CardDescription>
@@ -163,9 +163,9 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="col-span-1 lg:col-span-3 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm">
+        <Card className="col-span-1 lg:col-span-3 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold text-slate-900 dark:text-white">Adesões por Plano</CardTitle>
+            <CardTitle className="text-lg font-semibold text-slate-900 dark:text-slate-50">Adesões por Plano</CardTitle>
             <CardDescription className="text-slate-500 dark:text-slate-400">
               Distribuição de clientes ativos nos seus 6 planos.
             </CardDescription>
