@@ -53,10 +53,12 @@ const initialNewContract = {
 
 const ActionMenu = ({
   contractId,
+  onEdit,
   onUpdateStatus,
   onDelete,
 }: {
   contractId: string
+  onEdit: (id: string) => void
   onUpdateStatus: (id: string, status: ContractStatus) => void
   onDelete: (id: string) => void
 }) => {
@@ -96,7 +98,13 @@ const ActionMenu = ({
               <Mail className="h-4 w-4" />
               Reenviar para Assinatura
             </button>
-            <button className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-800 flex items-center gap-2">
+            <button
+              onClick={() => {
+                onEdit(contractId)
+                setIsOpen(false)
+              }}
+              className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-800 flex items-center gap-2"
+            >
               <Edit2 className="h-4 w-4" />
               Editar Detalhes
             </button>
@@ -185,6 +193,8 @@ export default function Contracts() {
   const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [newContract, setNewContract] = useState(initialNewContract)
+  const [editingContract, setEditingContract] = useState<Contract | null>(null)
+  const [editForm, setEditForm] = useState<Partial<Contract>>({})
 
   const fetchContracts = async () => {
     setIsLoading(true)
@@ -277,6 +287,33 @@ export default function Contracts() {
     setIsModalOpen(false)
     setNewContract(initialNewContract)
     fetchContracts()
+  }
+
+  const handleUpdateContractDetails = async (e: FormEvent) => {
+    e.preventDefault()
+
+    if (!editingContract) return
+
+    const payload = {
+      plan_name: editForm.plan_name,
+      status: editForm.status,
+      start_date: editForm.start_date,
+      end_date: editForm.end_date,
+    }
+
+    const { error } = await supabase
+      .from("saas_contracts")
+      .update(payload)
+      .eq("id", editingContract.id)
+
+    if (error) {
+      alert("Erro ao atualizar detalhes do contrato: " + error.message)
+      return
+    }
+
+    await fetchContracts()
+    setEditingContract(null)
+    setEditForm({})
   }
 
   const totalAtivos = contracts.filter((contract) => contract.status === "active").length
@@ -457,6 +494,13 @@ export default function Contracts() {
                 <TableCell className="text-right pr-4">
                   <ActionMenu
                     contractId={contract.id}
+                    onEdit={(id) => {
+                      const c = contracts.find((x) => x.id === id)
+                      if (c) {
+                        setEditingContract(c)
+                        setEditForm(c)
+                      }
+                    }}
                     onUpdateStatus={handleUpdateStatus}
                     onDelete={handleDeleteContract}
                   />
@@ -556,6 +600,111 @@ export default function Contracts() {
                 </Button>
                 <Button type="submit" className="bg-slate-900 text-white hover:bg-slate-800">
                   Criar Contrato
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {editingContract && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="w-full max-w-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl">
+            <div className="p-6 border-b border-slate-100 dark:border-slate-800/50 flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-50">Editar Detalhes do Contrato</h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  setEditingContract(null)
+                  setEditForm({})
+                }}
+                className="h-8 w-8 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-300"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <form onSubmit={handleUpdateContractDetails} className="p-6 space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Empresa</label>
+                <Input
+                  type="text"
+                  className="bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400"
+                  value={editingContract.companies?.name ?? "Empresa removida"}
+                  disabled
+                  readOnly
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Plano</label>
+                <select
+                  className="w-full h-10 px-3 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200"
+                  value={editForm.plan_name ?? "Starter"}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, plan_name: e.target.value }))}
+                  required
+                >
+                  <option value="Starter">Starter</option>
+                  <option value="Basic">Basic</option>
+                  <option value="Pro">Pro</option>
+                  <option value="Business">Business</option>
+                  <option value="Premium">Premium</option>
+                  <option value="Elite">Elite</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Status</label>
+                <select
+                  className="w-full h-10 px-3 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200"
+                  value={editForm.status ?? "pending"}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, status: e.target.value as ContractStatus }))}
+                  required
+                >
+                  <option value="active">Ativo</option>
+                  <option value="pending">Pendente</option>
+                  <option value="expired">Expirado</option>
+                  <option value="canceled">Cancelado</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Data de Início</label>
+                <Input
+                  type="date"
+                  className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 dark:text-white"
+                  value={editForm.start_date ?? ""}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, start_date: e.target.value }))}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Data de Fim</label>
+                <Input
+                  type="date"
+                  className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 dark:text-white"
+                  value={editForm.end_date ?? ""}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, end_date: e.target.value }))}
+                  required
+                />
+              </div>
+
+              <div className="pt-2 flex items-center justify-end gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setEditingContract(null)
+                    setEditForm({})
+                  }}
+                  className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200"
+                >
+                  Cancelar
+                </Button>
+                <Button type="submit" className="bg-slate-900 text-white hover:bg-slate-800">
+                  Salvar Alterações
                 </Button>
               </div>
             </form>
